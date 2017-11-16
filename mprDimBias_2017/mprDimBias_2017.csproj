@@ -1,0 +1,106 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{B2A4E879-14C6-462C-9922-9BB1C11E0D66}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>mprDimBias</RootNamespace>
+    <AssemblyName>mprDimBias_2017</AssemblyName>
+    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>..\..\..\..\..\..\..\ModPlus\Functions\Revit\mprDimBias\</OutputPath>
+    <DefineConstants>TRACE;DEBUG;R2017</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>..\..\..\..\..\..\..\ModPlus\Functions\Revit\mprDimBias\</OutputPath>
+    <DefineConstants>TRACE;R2017</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="MahApps.Metro">
+      <HintPath>..\..\..\..\..\..\..\ModPlus\Extensions\MahApps.Metro.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="ModPlusAPI">
+      <HintPath>..\..\..\..\..\..\..\ModPlus\Extensions\ModPlusAPI.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="PresentationCore" />
+    <Reference Include="PresentationFramework" />
+    <Reference Include="RevitAPI">
+      <HintPath>..\..\..\..\_Revit dlls\2017\RevitAPI.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="RevitAPIUI">
+      <HintPath>..\..\..\..\_Revit dlls\2017\RevitAPIUI.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Xaml" />
+    <Reference Include="WindowsBase" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="..\mprDimBias_2016\Application\MprDimBiasApp.cs">
+      <Link>Application\MprDimBiasApp.cs</Link>
+    </Compile>
+    <Compile Include="..\mprDimBias_2016\Application\MprDimBiasCommand.cs">
+      <Link>Application\MprDimBiasCommand.cs</Link>
+    </Compile>
+    <Compile Include="..\mprDimBias_2016\Body\AdvancedDimension.cs">
+      <Link>Body\AdvancedDimension.cs</Link>
+    </Compile>
+    <Compile Include="..\mprDimBias_2016\Body\AdvancedDimensionSegment.cs">
+      <Link>Body\AdvancedDimensionSegment.cs</Link>
+    </Compile>
+    <Compile Include="..\mprDimBias_2016\Body\DimDirection.cs">
+      <Link>Body\DimDirection.cs</Link>
+    </Compile>
+    <Compile Include="..\mprDimBias_2016\Body\DimensionsDilutionUpdater.cs">
+      <Link>Body\DimensionsDilutionUpdater.cs</Link>
+    </Compile>
+    <Compile Include="..\mprDimBias_2016\Body\DimInfo.cs">
+      <Link>Body\DimInfo.cs</Link>
+    </Compile>
+    <Compile Include="..\mprDimBias_2016\Body\GeometryHelpers.cs">
+      <Link>Body\GeometryHelpers.cs</Link>
+    </Compile>
+    <Compile Include="..\mprDimBias_2016\View\DimBiasSettings.xaml.cs">
+      <Link>View\DimBiasSettings.xaml.cs</Link>
+      <DependentUpon>DimBiasSettings.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="..\mprDimBias_2016\Work\DimensionsDilution.cs">
+      <Link>Work\DimensionsDilution.cs</Link>
+    </Compile>
+    <Compile Include="Interface.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="..\mprDimBias_2016\Resources\mprDimBias_16x16.png">
+      <Link>Resources\mprDimBias_16x16.png</Link>
+    </Resource>
+    <Resource Include="..\mprDimBias_2016\Resources\mprDimBias_32x32.png">
+      <Link>Resources\mprDimBias_32x32.png</Link>
+    </Resource>
+  </ItemGroup>
+  <ItemGroup>
+    <Page Include="..\mprDimBias_2016\View\DimBiasSettings.xaml">
+      <Link>View\DimBiasSettings.xaml</Link>
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+</Project>

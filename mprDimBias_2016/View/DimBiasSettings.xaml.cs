@@ -1,0 +1,71 @@
+﻿using System;
+using System.Globalization;
+using System.Windows;
+using Autodesk.Revit.DB;
+using mprDimBias.Application;
+using mprDimBias.Work;
+using ModPlusAPI;
+using ModPlusAPI.Windows;
+using ModPlusAPI.Windows.Helpers;
+
+namespace mprDimBias.View
+{
+    public partial class DimBiasSettings
+    {
+        public DimBiasSettings()
+        {
+            InitializeComponent();
+            this.OnWindowStartUp();
+        }
+
+        private void ChkOnOffDimBias_OnChecked(object sender, RoutedEventArgs e)
+        {
+            UserConfigFile.SetValue(UserConfigFile.ConfigFileZone.Settings, "mprDimBias", "DimBiasOnOff", true.ToString(), true);
+            AddInId addInId = new AddInId(new Interface().AddInId);
+            DimensionsDilution.DimDilutionOn(addInId,
+                ref MprDimBiasApp.DimensionsDilutionUpdater);
+        }
+
+        private void ChkOnOffDimBias_OnUnchecked(object sender, RoutedEventArgs e)
+        {
+            UserConfigFile.SetValue(UserConfigFile.ConfigFileZone.Settings, "mprDimBias", "DimBiasOnOff", false.ToString(), true);
+            AddInId addInId = new AddInId(new Interface().AddInId);
+            DimensionsDilution.DimDilutionOff(addInId,
+                ref MprDimBiasApp.DimensionsDilutionUpdater);
+        }
+
+        private void BtOk_OnClick(object sender, RoutedEventArgs e)
+        {
+            if (TbK.Value != null)
+            {
+                if (TbK.Value.Value < 0.1 || TbK.Value.Value > 1.0)
+                {
+                    ModPlusAPI.Windows.MessageBox.Show("Нужно указать число в диапазоне от 0,1 до 1,0 для коэффициента смещения");
+                    return;
+                }
+                MprDimBiasApp.K = TbK.Value.Value;
+                UserConfigFile.SetValue(UserConfigFile.ConfigFileZone.Settings, "mprDimBias", "K",
+                    TbK.Value.Value.ToString(CultureInfo.CurrentCulture), true);
+                Close();
+            }
+        }
+
+        private void DimBiasSettings_OnLoaded(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                Statistic.SendCommandStarting(new Interface());
+                TbK.Value = MprDimBiasApp.K;
+                ChkOnOffDimBias.IsChecked = !bool.TryParse(UserConfigFile.GetValue(
+                                                UserConfigFile.ConfigFileZone.Settings,
+                                                "mprDimBias", "DimBiasOnOff"), out var b) || b;
+                ChkOnOffDimBias.Checked += ChkOnOffDimBias_OnChecked;
+                ChkOnOffDimBias.Unchecked += ChkOnOffDimBias_OnUnchecked;
+            }
+            catch (Exception exception)
+            {
+                ExceptionBox.Show(exception);
+            }
+        }
+    }
+}
