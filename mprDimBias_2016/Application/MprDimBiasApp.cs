@@ -1,7 +1,10 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Reflection;
 using System.Windows.Media.Imaging;
+using Autodesk.Revit.DB;
 using Autodesk.Revit.UI;
 using mprDimBias.Body;
 using mprDimBias.Work;
@@ -12,7 +15,9 @@ namespace mprDimBias.Application
 {
     public class MprDimBiasApp : IExternalApplication
     {
-        public static DimensionsDilutionUpdater DimensionsDilutionUpdater = null;
+        public static DimensionsDilutionUpdater DimensionsDilutionUpdater;
+        public static DimensionsModifyDilutionUpdater DimensionsModifyDilutionUpdater;
+        public static Dictionary<ElementId, bool> DimsModifiedByUpdater;
         public static UIControlledApplication Application;
         public static double K;
 
@@ -20,18 +25,25 @@ namespace mprDimBias.Application
         {
             try
             {
+                DimsModifiedByUpdater = new Dictionary<ElementId, bool>();
                 Application = application;
                 var dimDilWorkVar = !bool.TryParse(UserConfigFile.GetValue(UserConfigFile.ConfigFileZone.Settings,
                                         "mprDimBias", "DimBiasOnOff"), out var b) || b;
-                K = double.TryParse(UserConfigFile.GetValue(UserConfigFile.ConfigFileZone.Settings,
-                    "mprDimBias", "K").Replace(',', '.'), out var d)
+                var dimModifiedDilWorkVar = !bool.TryParse(UserConfigFile.GetValue(UserConfigFile.ConfigFileZone.Settings,
+                                        "mprDimBias", "ModifiedDimBiasOnOff"), out b) || b;
+                Char separator = System.Globalization.CultureInfo.CurrentCulture.NumberFormat.CurrencyDecimalSeparator[0];
+                K = double.TryParse(UserConfigFile.GetValue(UserConfigFile.ConfigFileZone.Settings,  "mprDimBias", "K"),NumberStyles.Number, CultureInfo.InvariantCulture, out var d)
                     ? d
                     : 0.6;
 
                 DimensionsDilutionUpdater = new DimensionsDilutionUpdater();
+                DimensionsModifyDilutionUpdater = new DimensionsModifyDilutionUpdater();
                 if (dimDilWorkVar)
                     DimensionsDilution.DimDilutionOn(application.ActiveAddInId, ref DimensionsDilutionUpdater);
                 else DimensionsDilution.DimDilutionOff(application.ActiveAddInId, ref DimensionsDilutionUpdater);
+                if (dimModifiedDilWorkVar)
+                    DimensionsDilution.DimModifiedDilutionOn(application.ActiveAddInId, ref DimensionsModifyDilutionUpdater);
+                else DimensionsDilution.DimModifiedDilutionOff(application.ActiveAddInId, ref DimensionsModifyDilutionUpdater);
                 // create ribbon tab
                 CreateRibbonTab(application);
             }

@@ -33,6 +33,20 @@ namespace mprDimBias.View
             DimensionsDilution.DimDilutionOff(addInId,
                 ref MprDimBiasApp.DimensionsDilutionUpdater);
         }
+        private void ChkOnOffDimModifyBias_Checked(object sender, RoutedEventArgs e)
+        {
+            UserConfigFile.SetValue(UserConfigFile.ConfigFileZone.Settings, "mprDimBias", "ModifiedDimBiasOnOff", true.ToString(), true);
+            AddInId addInId = new AddInId(new Interface().AddInId);
+            DimensionsDilution.DimModifiedDilutionOn(addInId,
+                ref MprDimBiasApp.DimensionsModifyDilutionUpdater);
+        }
+        private void ChkOnOffDimModifyBias_Unchecked(object sender, RoutedEventArgs e)
+        {
+            UserConfigFile.SetValue(UserConfigFile.ConfigFileZone.Settings, "mprDimBias", "ModifiedDimBiasOnOff", false.ToString(), true);
+            AddInId addInId = new AddInId(new Interface().AddInId);
+            DimensionsDilution.DimModifiedDilutionOff(addInId,
+                ref MprDimBiasApp.DimensionsModifyDilutionUpdater);
+        }
 
         private void BtOk_OnClick(object sender, RoutedEventArgs e)
         {
@@ -45,7 +59,7 @@ namespace mprDimBias.View
                 }
                 MprDimBiasApp.K = TbK.Value.Value;
                 UserConfigFile.SetValue(UserConfigFile.ConfigFileZone.Settings, "mprDimBias", "K",
-                    TbK.Value.Value.ToString(CultureInfo.CurrentCulture), true);
+                    TbK.Value.Value.ToString(CultureInfo.InvariantCulture), true);
                 Close();
             }
         }
@@ -59,8 +73,13 @@ namespace mprDimBias.View
                 ChkOnOffDimBias.IsChecked = !bool.TryParse(UserConfigFile.GetValue(
                                                 UserConfigFile.ConfigFileZone.Settings,
                                                 "mprDimBias", "DimBiasOnOff"), out var b) || b;
+                ChkOnOffDimModifyBias.IsChecked = !bool.TryParse(UserConfigFile.GetValue(
+                                                UserConfigFile.ConfigFileZone.Settings,
+                                                "mprDimBias", "ModifiedDimBiasOnOff"), out b) || b;
                 ChkOnOffDimBias.Checked += ChkOnOffDimBias_OnChecked;
                 ChkOnOffDimBias.Unchecked += ChkOnOffDimBias_OnUnchecked;
+                ChkOnOffDimModifyBias.Checked += ChkOnOffDimModifyBias_Checked;
+                ChkOnOffDimModifyBias.Unchecked += ChkOnOffDimModifyBias_Unchecked;
             }
             catch (Exception exception)
             {

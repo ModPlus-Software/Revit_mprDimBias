@@ -65,7 +65,6 @@ namespace mprDimBias.Body
             StringLenght = ValueString.Length * textSize * scale * MprDimBiasApp.K;
             NeedCorect = StringLenght >= Value;
         }
-
 #endregion
     }
 }
