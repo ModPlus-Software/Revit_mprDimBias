@@ -11,7 +11,14 @@ namespace mprDimBias.Work
         /// <param name="modified">Размер был изменен</param>
         public static void DoDilution(Dimension dimension, Document doc, out bool modified)
         {
-            new AdvancedDimension(dimension, doc).SetMoveForCorrect(out modified);
+            try
+            {
+                new AdvancedDimension(dimension, doc).SetMoveForCorrect(out modified);
+            }
+            catch
+            {
+                modified = false;
+            }
         }
 
         public static void DimDilutionOn(AddInId activeAddInId, ref DimensionsDilutionUpdater updater)
