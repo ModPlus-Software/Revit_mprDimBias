@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Autodesk.Revit.DB;
 using mprDimBias.Application;
+using ModPlusAPI.Windows;
 
 namespace mprDimBias.Body
 {
@@ -62,8 +63,8 @@ namespace mprDimBias.Body
                 AdvancedSegments.ForEach(s => s.SetCorrectStatus(TextHeight, Scale));
                 AdvancedCorrectSegments =
                 (from x in AdvancedSegments
-                    where x.NeedCorect
-                    select x).ToList();
+                 where x.NeedCorect
+                 select x).ToList();
                 if (Dimension.Curve is Line line)
                 {
                     Info = new DimInfo(doc.ActiveView, line.Direction);
@@ -112,7 +113,7 @@ namespace mprDimBias.Body
         public void SetMoveForCorrect(out bool modified)
         {
             modified = false;
-            if(!IsValid) return;
+            if (!IsValid) return;
 
             if (AdvancedCorrectSegments != null && AdvancedCorrectSegments.Count != 0)
             {
@@ -142,12 +143,33 @@ namespace mprDimBias.Body
             {
                 if (Dimension.ValueString != null)
                 {
-                    double stringLen = Dimension.ValueString.Length * TextHeight * Scale * MprDimBiasApp.K;
-                    double? value = Dimension.Value;
-                    if (stringLen >= value.GetValueOrDefault() && value.HasValue)
+                    bool checkByTextLenght = false;
+                    if (Dimension.Origin != null && Dimension.LeaderEndPosition != null &&
+                        Dimension.TextPosition != null)
                     {
-                        modified = true;
-                        SimpleMove(stringLen, 1);
+                        // Три вектора (стороны треугольника). Нужно получить три угла
+                        // если все углы меньше 90 (или хоть один равен 90), значит текст
+                        // расположен "внутри" размера
+                        var vec1 = Dimension.Origin - Dimension.LeaderEndPosition;
+                        var vec2 = Dimension.TextPosition - Dimension.Origin;
+                        var vec3 = Dimension.TextPosition - Dimension.LeaderEndPosition;
+                        var ang1 = vec1.AngleTo(vec2) * 180 / Math.PI;
+                        var ang2 = vec2.AngleTo(vec3) * 180 / Math.PI;
+                        var ang3 = vec3.AngleTo(vec1) * 180 / Math.PI;
+                        if (ang3 <= 90.0 && ang2 <= 90.0 && ang1 <= 90.0)
+                            checkByTextLenght = true;
+                    }
+                    else checkByTextLenght = true;
+
+                    if (checkByTextLenght)
+                    {
+                        double stringLen = Dimension.ValueString.Length * TextHeight * Scale * MprDimBiasApp.K;
+                        double? value = Dimension.Value;
+                        if (stringLen >= value.GetValueOrDefault() && value.HasValue)
+                        {
+                            modified = true;
+                            SimpleMove(stringLen, 1);
+                        }
                     }
                 }
             }
@@ -189,13 +211,13 @@ namespace mprDimBias.Body
                 var leftSegment = middle[i].BeforeSegment;
                 var rightSegment = middle[i].AfterSegment;
                 //if (rightSegment.Value != null && rightSegment.Value > middle[0].Value * 8)
-                if(rightSegment.Value != null && HasFreeSpace(middle[0], rightSegment))
+                if (rightSegment.Value != null && HasFreeSpace(middle[0], rightSegment))
                 {
                     horVector = -1;
                     ComplexMoveSegm(middle[i], horVector, vertVector * siegth, i);
                 }
                 //else if (leftSegment.Value != null && leftSegment.Value > middle[0].Value * 8)
-                else if(leftSegment.Value != null && HasFreeSpace(middle[0], leftSegment))
+                else if (leftSegment.Value != null && HasFreeSpace(middle[0], leftSegment))
                 {
                     horVector = 1;
                     ComplexMoveSegm(middle[i], horVector, vertVector * siegth, i);
