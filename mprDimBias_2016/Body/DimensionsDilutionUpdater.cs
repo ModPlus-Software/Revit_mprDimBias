@@ -18,6 +18,7 @@ namespace mprDimBias.Body
         {
             Document doc = data.GetDocument();
             if(doc?.ActiveView == null) return;
+            if(doc.IsFamilyDocument) return;
             foreach (ElementId elementId in data.GetAddedElementIds())
             {
                 if (doc.GetElement(elementId) is Dimension dimension)
@@ -69,6 +70,7 @@ namespace mprDimBias.Body
         {
             Document doc = data.GetDocument();
             if (doc?.ActiveView == null) return;
+            if (doc.IsFamilyDocument) return;
             foreach (ElementId elementId in data.GetModifiedElementIds())
             {
                 if (doc.GetElement(elementId) is Dimension dimension)

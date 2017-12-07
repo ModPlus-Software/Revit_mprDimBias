@@ -143,26 +143,26 @@ namespace mprDimBias.Body
             {
                 if (Dimension.ValueString != null)
                 {
-                    bool checkByTextLenght = false;
-                    if (Dimension.Origin != null && Dimension.LeaderEndPosition != null &&
-                        Dimension.TextPosition != null)
-                    {
-                        // Три вектора (стороны треугольника). Нужно получить три угла
-                        // если все углы меньше 90 (или хоть один равен 90), значит текст
-                        // расположен "внутри" размера
-                        var vec1 = Dimension.Origin - Dimension.LeaderEndPosition;
-                        var vec2 = Dimension.TextPosition - Dimension.Origin;
-                        var vec3 = Dimension.TextPosition - Dimension.LeaderEndPosition;
-                        var ang1 = vec1.AngleTo(vec2) * 180 / Math.PI;
-                        var ang2 = vec2.AngleTo(vec3) * 180 / Math.PI;
-                        var ang3 = vec3.AngleTo(vec1) * 180 / Math.PI;
-                        if (ang3 <= 90.0 && ang2 <= 90.0 && ang1 <= 90.0)
-                            checkByTextLenght = true;
-                    }
-                    else checkByTextLenght = true;
+                    //bool checkByTextLenght = false;
+                    //if (Dimension.Origin != null && Dimension.LeaderEndPosition != null &&
+                    //    Dimension.TextPosition != null)
+                    //{
+                    //    // Три вектора (стороны треугольника). Нужно получить три угла
+                    //    // если все углы меньше 90 (или хоть один равен 90), значит текст
+                    //    // расположен "внутри" размера
+                    //    var vec1 = Dimension.Origin - Dimension.LeaderEndPosition;
+                    //    var vec2 = Dimension.TextPosition - Dimension.Origin;
+                    //    var vec3 = Dimension.TextPosition - Dimension.LeaderEndPosition;
+                    //    var ang1 = vec1.AngleTo(vec2) * 180 / Math.PI;
+                    //    var ang2 = vec2.AngleTo(vec3) * 180 / Math.PI;
+                    //    var ang3 = vec3.AngleTo(vec1) * 180 / Math.PI;
+                    //    if (ang3 <= 90.0 && ang2 <= 90.0 && ang1 <= 90.0)
+                    //        checkByTextLenght = true;
+                    //}
+                    //else checkByTextLenght = true;
 
-                    if (checkByTextLenght)
-                    {
+                    //if (checkByTextLenght)
+                    //{
                         double stringLen = Dimension.ValueString.Length * TextHeight * Scale * MprDimBiasApp.K;
                         double? value = Dimension.Value;
                         if (stringLen >= value.GetValueOrDefault() && value.HasValue)
@@ -170,7 +170,7 @@ namespace mprDimBias.Body
                             modified = true;
                             SimpleMove(stringLen, 1);
                         }
-                    }
+                    //}
                 }
             }
         }

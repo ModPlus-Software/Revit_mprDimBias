@@ -63,28 +63,28 @@ namespace mprDimBias.Body
 
         public void SetCorrectStatus(double scale, double textSize)
         {
-            bool checkByTextLenght = false;
-            if (Segment.Origin != null && Segment.LeaderEndPosition != null && Segment.TextPosition != null)
-            {
-                // Три вектора (стороны треугольника). Нужно получить три угла
-                // если все углы меньше 90 (или хоть один равен 90), значит текст
-                // расположен "внутри" размера
-                var vec1 = Segment.Origin - Segment.LeaderEndPosition;
-                var vec2 = Segment.TextPosition - Segment.Origin;
-                var vec3 = Segment.TextPosition - Segment.LeaderEndPosition;
-                var ang1 = vec1.AngleTo(vec2) * 180 / Math.PI;
-                var ang2 = vec2.AngleTo(vec3) * 180 / Math.PI;
-                var ang3 = vec3.AngleTo(vec1) * 180 / Math.PI;
-                if (ang3 <= 90.0 && ang2 <= 90.0 && ang1 <= 90.0)
-                    checkByTextLenght = true;
-            }
-            else checkByTextLenght = true;
+            //bool checkByTextLenght = false;
+            //if (Segment.Origin != null && Segment.LeaderEndPosition != null && Segment.TextPosition != null)
+            //{
+            //    // Три вектора (стороны треугольника). Нужно получить три угла
+            //    // если все углы меньше 90 (или хоть один равен 90), значит текст
+            //    // расположен "внутри" размера
+            //    var vec1 = Segment.Origin - Segment.LeaderEndPosition;
+            //    var vec2 = Segment.TextPosition - Segment.Origin;
+            //    var vec3 = Segment.TextPosition - Segment.LeaderEndPosition;
+            //    var ang1 = vec1.AngleTo(vec2) * 180 / Math.PI;
+            //    var ang2 = vec2.AngleTo(vec3) * 180 / Math.PI;
+            //    var ang3 = vec3.AngleTo(vec1) * 180 / Math.PI;
+            //    if (ang3 <= 90.0 && ang2 <= 90.0 && ang1 <= 90.0)
+            //        checkByTextLenght = true;
+            //}
+            //else checkByTextLenght = true;
 
-            if (checkByTextLenght)
-            {
+            //if (checkByTextLenght)
+            //{
                 StringLenght = ValueString.Length * textSize * scale * MprDimBiasApp.K;
                 NeedCorect = StringLenght >= Value;
-            }
+            //}
         }
 #endregion
     }
