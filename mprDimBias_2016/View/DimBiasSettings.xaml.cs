@@ -6,16 +6,16 @@ using mprDimBias.Application;
 using mprDimBias.Work;
 using ModPlusAPI;
 using ModPlusAPI.Windows;
-using ModPlusAPI.Windows.Helpers;
 
 namespace mprDimBias.View
 {
     public partial class DimBiasSettings
     {
+        private const string LangItem = "mprDimBias";
         public DimBiasSettings()
         {
             InitializeComponent();
-            this.OnWindowStartUp();
+            Title = ModPlusAPI.Language.GetItem(LangItem, "h1");
         }
 
         private void ChkOnOffDimBias_OnChecked(object sender, RoutedEventArgs e)
@@ -54,7 +54,7 @@ namespace mprDimBias.View
             {
                 if (TbK.Value.Value < 0.1 || TbK.Value.Value > 1.0)
                 {
-                    ModPlusAPI.Windows.MessageBox.Show("Нужно указать число в диапазоне от 0,1 до 1,0 для коэффициента смещения");
+                    ModPlusAPI.Windows.MessageBox.Show(ModPlusAPI.Language.GetItem(LangItem, "h5"), MessageBoxIcon.Alert);
                     return;
                 }
                 MprDimBiasApp.K = TbK.Value.Value;

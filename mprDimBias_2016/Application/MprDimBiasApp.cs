@@ -66,18 +66,18 @@ namespace mprDimBias.Application
             var rPanels = application.GetRibbonPanels("ModPlus");
             foreach (RibbonPanel rPanel in rPanels)
             {
-                if (rPanel.Name.Equals("Аннотации"))
+                if (rPanel.Name.Equals(Language.TryGetCuiLocalGroupName("Аннотации")))
                 {
                     panel = rPanel;
                     break;
                 }
             }
             if(panel == null)
-                panel = application.CreateRibbonPanel("ModPlus", "Аннотации");
+                panel = application.CreateRibbonPanel("ModPlus", Language.TryGetCuiLocalGroupName("Аннотации"));
             var intF = new Interface();
             PushButtonData rid = new PushButtonData(
                 intF.Name,
-                ConvertLName(intF.LName),
+                ConvertLName(Language.GetFunctionLocalName(intF.Name, intF.LName)),
                 Assembly.GetExecutingAssembly().Location,
                 intF.FullClassName)
             {
@@ -85,6 +85,8 @@ namespace mprDimBias.Application
                                                      intF.AvailProductExternalVersion +
                                                      ";component/Resources/mprDimBias_32x32.png"))
             };
+            rid.ToolTip = Language.GetFunctionShortDescrition(intF.Name, intF.Description);
+            rid.LongDescription = Language.GetFunctionFullDescription(intF.Name, intF.FullDescription);
             panel.AddItem(rid);
         }
         private static string ConvertLName(string lName)
