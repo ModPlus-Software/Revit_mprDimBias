@@ -47,7 +47,7 @@ namespace mprDimBias.Body
 
         public bool IsLast { get; set; }
 
-        public bool NeedCorect { get; set; }
+        public bool NeedCorrect { get; set; }
 
         public XYZ PosXyz { get; set; }
 
@@ -82,8 +82,12 @@ namespace mprDimBias.Body
 
             //if (checkByTextLenght)
             //{
+            if (Segment.IsTextPositionAdjustable())
+            {
                 StringLenght = ValueString.Length * textSize * scale * MprDimBiasApp.K;
-                NeedCorect = StringLenght >= Value;
+                NeedCorrect = StringLenght >= Value;
+            }
+            else NeedCorrect = false;
             //}
         }
 #endregion

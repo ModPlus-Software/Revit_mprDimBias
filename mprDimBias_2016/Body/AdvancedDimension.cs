@@ -63,7 +63,7 @@ namespace mprDimBias.Body
                 AdvancedSegments.ForEach(s => s.SetCorrectStatus(TextHeight, Scale));
                 AdvancedCorrectSegments =
                 (from x in AdvancedSegments
-                 where x.NeedCorect
+                 where x.NeedCorrect
                  select x).ToList();
                 if (Dimension.Curve is Line line)
                 {
