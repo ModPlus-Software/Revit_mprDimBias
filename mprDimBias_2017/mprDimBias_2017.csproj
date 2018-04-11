@@ -23,7 +23,7 @@
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
-    <Optimize>true</Optimize>
+    <Optimize>false</Optimize>
     <OutputPath>..\..\..\..\..\..\..\ModPlus\Functions\Revit\mprDimBias\</OutputPath>
     <DefineConstants>TRACE;R2017</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
