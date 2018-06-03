@@ -70,12 +70,8 @@ namespace mprDimBias.View
             {
                 Statistic.SendCommandStarting(new Interface());
                 TbK.Value = MprDimBiasApp.K;
-                ChkOnOffDimBias.IsChecked = !bool.TryParse(UserConfigFile.GetValue(
-                                                UserConfigFile.ConfigFileZone.Settings,
-                                                "mprDimBias", "DimBiasOnOff"), out var b) || b;
-                ChkOnOffDimModifyBias.IsChecked = !bool.TryParse(UserConfigFile.GetValue(
-                                                UserConfigFile.ConfigFileZone.Settings,
-                                                "mprDimBias", "ModifiedDimBiasOnOff"), out b) || b;
+                ChkOnOffDimBias.IsChecked = bool.TryParse(UserConfigFile.GetValue(UserConfigFile.ConfigFileZone.Settings, "mprDimBias", "DimBiasOnOff"), out var b) && b; 
+                ChkOnOffDimModifyBias.IsChecked = bool.TryParse(UserConfigFile.GetValue(UserConfigFile.ConfigFileZone.Settings,"mprDimBias", "ModifiedDimBiasOnOff"), out b) && b;
                 ChkOnOffDimBias.Checked += ChkOnOffDimBias_OnChecked;
                 ChkOnOffDimBias.Unchecked += ChkOnOffDimBias_OnUnchecked;
                 ChkOnOffDimModifyBias.Checked += ChkOnOffDimModifyBias_Checked;

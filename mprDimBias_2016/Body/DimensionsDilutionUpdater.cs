@@ -26,7 +26,8 @@ namespace mprDimBias.Body
                     try
                     {
                         DimensionsDilution.DoDilution(dimension, doc, out bool modified);
-                        MprDimBiasApp.DimsModifiedByUpdater.Add(elementId, modified);
+                        if(!MprDimBiasApp.DimsModifiedByUpdater.ContainsKey(elementId))
+                            MprDimBiasApp.DimsModifiedByUpdater.Add(elementId, modified);
                     }
                     catch (Exception exception)
                     {
@@ -96,7 +97,8 @@ namespace mprDimBias.Body
                         try
                         {
                             DimensionsDilution.DoDilution(dimension, doc, out bool modified);
-                            MprDimBiasApp.DimsModifiedByUpdater.Add(elementId, modified);
+                            if (!MprDimBiasApp.DimsModifiedByUpdater.ContainsKey(elementId))
+                                MprDimBiasApp.DimsModifiedByUpdater.Add(elementId, modified);
                         }
                         catch (Exception exception)
                         {
