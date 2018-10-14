@@ -81,7 +81,7 @@ namespace mprDimBias.Application
                 Assembly.GetExecutingAssembly().Location,
                 intF.FullClassName)
             {
-                LargeImage = new BitmapImage(new Uri("pack://application:,,,/mprDimBias_" +
+                LargeImage = new System.Windows.Media.Imaging.BitmapImage(new Uri("pack://application:,,,/mprDimBias_" +
                                                      intF.AvailProductExternalVersion +
                                                      ";component/Resources/mprDimBias_32x32.png"))
             };
