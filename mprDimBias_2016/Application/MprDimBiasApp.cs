@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Reflection;
-using System.Windows.Media.Imaging;
 using Autodesk.Revit.DB;
 using Autodesk.Revit.UI;
 using mprDimBias.Body;
@@ -27,11 +26,13 @@ namespace mprDimBias.Application
             {
                 DimsModifiedByUpdater = new Dictionary<ElementId, bool>();
                 Application = application;
-                var dimDilWorkVar = !bool.TryParse(UserConfigFile.GetValue(UserConfigFile.ConfigFileZone.Settings,
-                                        "mprDimBias", "DimBiasOnOff"), out var b) || b;
-                var dimModifiedDilWorkVar = !bool.TryParse(UserConfigFile.GetValue(UserConfigFile.ConfigFileZone.Settings,
-                                        "mprDimBias", "ModifiedDimBiasOnOff"), out b) || b;
-                Char separator = System.Globalization.CultureInfo.CurrentCulture.NumberFormat.CurrencyDecimalSeparator[0];
+
+                var dimDilWorkVar = bool.TryParse(UserConfigFile.GetValue(UserConfigFile.ConfigFileZone.Settings,
+                                        "mprDimBias", "DimBiasOnOff"), out var b) && b;
+
+                var dimModifiedDilWorkVar = bool.TryParse(UserConfigFile.GetValue(UserConfigFile.ConfigFileZone.Settings,
+                                        "mprDimBias", "ModifiedDimBiasOnOff"), out b) && b;
+
                 K = double.TryParse(UserConfigFile.GetValue(UserConfigFile.ConfigFileZone.Settings,  "mprDimBias", "K"),NumberStyles.Number, CultureInfo.InvariantCulture, out var d)
                     ? d
                     : 0.6;
@@ -44,6 +45,7 @@ namespace mprDimBias.Application
                 if (dimModifiedDilWorkVar)
                     DimensionsDilution.DimModifiedDilutionOn(application.ActiveAddInId, ref DimensionsModifyDilutionUpdater);
                 else DimensionsDilution.DimModifiedDilutionOff(application.ActiveAddInId, ref DimensionsModifyDilutionUpdater);
+
                 // create ribbon tab
                 CreateRibbonTab(application);
             }
