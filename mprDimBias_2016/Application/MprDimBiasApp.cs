@@ -23,6 +23,7 @@ namespace mprDimBias.Application
         public static UIControlledApplication Application;
         public static double K;
         public static bool IsSyncInWork;
+        // todo - ссылка уже есть выше. Убрать!
         private UIControlledApplication _controlledApplication;
 
         public Result OnStartup(UIControlledApplication application)
