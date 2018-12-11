@@ -12,6 +12,9 @@ using ModPlusAPI.Windows;
 
 namespace mprDimBias.Application
 {
+    using Autodesk.Revit.DB.Events;
+    using Autodesk.Revit.UI.Events;
+
     public class MprDimBiasApp : IExternalApplication
     {
         public static DimensionsDilutionUpdater DimensionsDilutionUpdater;
@@ -19,11 +22,16 @@ namespace mprDimBias.Application
         public static Dictionary<ElementId, bool> DimsModifiedByUpdater;
         public static UIControlledApplication Application;
         public static double K;
+        public static bool IsSyncInWork;
+        private UIControlledApplication _controlledApplication;
 
         public Result OnStartup(UIControlledApplication application)
         {
             try
             {
+                _controlledApplication = application;
+                _controlledApplication.Idling += ApplicationOnIdling;
+
                 DimsModifiedByUpdater = new Dictionary<ElementId, bool>();
                 Application = application;
 
@@ -55,6 +63,26 @@ namespace mprDimBias.Application
                 return Result.Failed;
             }
             return Result.Succeeded;
+        }
+
+        private void ApplicationOnIdling(object sender, IdlingEventArgs e)
+        {
+            if (sender is UIApplication uiApplication)
+            {
+                _controlledApplication.Idling -= ApplicationOnIdling;
+                uiApplication.Application.DocumentSynchronizingWithCentral += ApplicationOnDocumentSynchronizingWithCentral;
+                uiApplication.Application.DocumentSynchronizedWithCentral += ApplicationOnDocumentSynchronizedWithCentral;
+            }
+        }
+
+        private void ApplicationOnDocumentSynchronizedWithCentral(object sender, DocumentSynchronizedWithCentralEventArgs e)
+        {
+            IsSyncInWork = false;
+        }
+
+        private void ApplicationOnDocumentSynchronizingWithCentral(object sender, DocumentSynchronizingWithCentralEventArgs e)
+        {
+            IsSyncInWork = true;
         }
 
         public Result OnShutdown(UIControlledApplication application)
@@ -91,6 +119,7 @@ namespace mprDimBias.Application
             rid.LongDescription = Language.GetFunctionFullDescription(intF.Name, intF.FullDescription);
             panel.AddItem(rid);
         }
+
         private static string ConvertLName(string lName)
         {
             if (!lName.Contains(" ")) return lName;

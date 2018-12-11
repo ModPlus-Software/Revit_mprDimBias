@@ -9,7 +9,7 @@ namespace mprDimBias.Body
     public class DimensionsDilutionUpdater : IUpdater
     {
         private static UpdaterId _updaterId;
-
+        
         public DimensionsDilutionUpdater()
         {
             _updaterId = new UpdaterId(new AddInId(new Interface().AddInId), new Guid("d6ead746-4376-4484-b900-5f63d191476f"));
@@ -17,8 +17,13 @@ namespace mprDimBias.Body
         public void Execute(UpdaterData data)
         {
             Document doc = data.GetDocument();
-            if(doc?.ActiveView == null) return;
-            if(doc.IsFamilyDocument) return;
+            if(doc?.ActiveView == null)
+                return;
+            if(doc.IsFamilyDocument)
+                return;
+            if (MprDimBiasApp.IsSyncInWork)
+                return;
+
             foreach (ElementId elementId in data.GetAddedElementIds())
             {
                 if (doc.GetElement(elementId) is Dimension dimension)
@@ -70,8 +75,13 @@ namespace mprDimBias.Body
         public void Execute(UpdaterData data)
         {
             Document doc = data.GetDocument();
-            if (doc?.ActiveView == null) return;
-            if (doc.IsFamilyDocument) return;
+            if (doc?.ActiveView == null)
+                return;
+            if (doc.IsFamilyDocument)
+                return;
+            if (MprDimBiasApp.IsSyncInWork)
+                return;
+
             foreach (ElementId elementId in data.GetModifiedElementIds())
             {
                 if (doc.GetElement(elementId) is Dimension dimension)
