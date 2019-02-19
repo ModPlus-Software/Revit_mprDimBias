@@ -38,6 +38,10 @@
       <HintPath>..\..\..\..\..\..\..\ModPlus\Extensions\ModPlusStyle.dll</HintPath>
       <Private>False</Private>
     </Reference>
+    <Reference Include="ModPlus_Revit_2017">
+      <HintPath>..\..\..\..\..\..\..\ModPlus\Extensions\ModPlus_Revit_2017.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
     <Reference Include="RevitAPI">

@@ -118,6 +118,7 @@ namespace mprDimBias.Application
             };
             rid.ToolTip = Language.GetFunctionShortDescrition(intF.Name, intF.Description);
             rid.LongDescription = Language.GetFunctionFullDescription(intF.Name, intF.FullDescription);
+            rid.SetContextualHelp(new ContextualHelp(ContextualHelpType.Url, ModPlus_Revit.App.RibbonBuilder.GetHelpUrl(intF.Name)));
             panel.AddItem(rid);
         }
 
