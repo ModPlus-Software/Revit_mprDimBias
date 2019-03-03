@@ -12,7 +12,7 @@ namespace mprDimBias.Body
         
         public DimensionsDilutionUpdater()
         {
-            _updaterId = new UpdaterId(new AddInId(new Interface().AddInId), new Guid("d6ead746-4376-4484-b900-5f63d191476f"));
+            _updaterId = new UpdaterId(new AddInId(new ModPlusConnector().AddInId), new Guid("d6ead746-4376-4484-b900-5f63d191476f"));
         }
         public void Execute(UpdaterData data)
         {
@@ -70,7 +70,7 @@ namespace mprDimBias.Body
 
         public DimensionsModifyDilutionUpdater()
         {
-            _updaterId = new UpdaterId(new AddInId(new Interface().AddInId), new Guid("25877119-32d3-4c0b-8782-33afd1ccbe05"));
+            _updaterId = new UpdaterId(new AddInId(new ModPlusConnector().AddInId), new Guid("25877119-32d3-4c0b-8782-33afd1ccbe05"));
         }
         public void Execute(UpdaterData data)
         {

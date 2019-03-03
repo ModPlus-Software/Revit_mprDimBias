@@ -21,7 +21,7 @@ namespace mprDimBias.View
         private void ChkOnOffDimBias_OnChecked(object sender, RoutedEventArgs e)
         {
             UserConfigFile.SetValue(UserConfigFile.ConfigFileZone.Settings, "mprDimBias", "DimBiasOnOff", true.ToString(), true);
-            AddInId addInId = new AddInId(new Interface().AddInId);
+            AddInId addInId = new AddInId(new ModPlusConnector().AddInId);
             DimensionsDilution.DimDilutionOn(addInId,
                 ref MprDimBiasApp.DimensionsDilutionUpdater);
         }
@@ -29,21 +29,21 @@ namespace mprDimBias.View
         private void ChkOnOffDimBias_OnUnchecked(object sender, RoutedEventArgs e)
         {
             UserConfigFile.SetValue(UserConfigFile.ConfigFileZone.Settings, "mprDimBias", "DimBiasOnOff", false.ToString(), true);
-            AddInId addInId = new AddInId(new Interface().AddInId);
+            AddInId addInId = new AddInId(new ModPlusConnector().AddInId);
             DimensionsDilution.DimDilutionOff(addInId,
                 ref MprDimBiasApp.DimensionsDilutionUpdater);
         }
         private void ChkOnOffDimModifyBias_Checked(object sender, RoutedEventArgs e)
         {
             UserConfigFile.SetValue(UserConfigFile.ConfigFileZone.Settings, "mprDimBias", "ModifiedDimBiasOnOff", true.ToString(), true);
-            AddInId addInId = new AddInId(new Interface().AddInId);
+            AddInId addInId = new AddInId(new ModPlusConnector().AddInId);
             DimensionsDilution.DimModifiedDilutionOn(addInId,
                 ref MprDimBiasApp.DimensionsModifyDilutionUpdater);
         }
         private void ChkOnOffDimModifyBias_Unchecked(object sender, RoutedEventArgs e)
         {
             UserConfigFile.SetValue(UserConfigFile.ConfigFileZone.Settings, "mprDimBias", "ModifiedDimBiasOnOff", false.ToString(), true);
-            AddInId addInId = new AddInId(new Interface().AddInId);
+            AddInId addInId = new AddInId(new ModPlusConnector().AddInId);
             DimensionsDilution.DimModifiedDilutionOff(addInId,
                 ref MprDimBiasApp.DimensionsModifyDilutionUpdater);
         }
@@ -68,7 +68,7 @@ namespace mprDimBias.View
         {
             try
             {
-                Statistic.SendCommandStarting(new Interface());
+                Statistic.SendCommandStarting(new ModPlusConnector());
                 TbK.Value = MprDimBiasApp.K;
                 ChkOnOffDimBias.IsChecked = bool.TryParse(UserConfigFile.GetValue(UserConfigFile.ConfigFileZone.Settings, "mprDimBias", "DimBiasOnOff"), out var b) && b; 
                 ChkOnOffDimModifyBias.IsChecked = bool.TryParse(UserConfigFile.GetValue(UserConfigFile.ConfigFileZone.Settings,"mprDimBias", "ModifiedDimBiasOnOff"), out b) && b;

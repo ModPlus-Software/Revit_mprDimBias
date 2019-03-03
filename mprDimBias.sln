@@ -11,6 +11,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "mprDimBias_2018", "mprDimBi
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "mprDimBias_2019", "mprDimBias_2019\mprDimBias_2019.csproj", "{45B65FDE-31AA-4BD5-B942-F63CF9568840}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "mprDimBias_2020", "mprDimBias_2020\mprDimBias_2020.csproj", "{BFA92F24-447A-4E4E-8C25-5B2A3C1D9305}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -33,6 +35,10 @@ Global
 		{45B65FDE-31AA-4BD5-B942-F63CF9568840}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{45B65FDE-31AA-4BD5-B942-F63CF9568840}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{45B65FDE-31AA-4BD5-B942-F63CF9568840}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BFA92F24-447A-4E4E-8C25-5B2A3C1D9305}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BFA92F24-447A-4E4E-8C25-5B2A3C1D9305}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BFA92F24-447A-4E4E-8C25-5B2A3C1D9305}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BFA92F24-447A-4E4E-8C25-5B2A3C1D9305}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

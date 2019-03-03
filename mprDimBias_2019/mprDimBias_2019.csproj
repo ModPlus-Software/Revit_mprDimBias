@@ -20,6 +20,7 @@
     <DefineConstants>TRACE;DEBUG;R2019</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <PlatformTarget>x64</PlatformTarget>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -28,6 +29,7 @@
     <DefineConstants>TRACE;R2019</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <PlatformTarget>x64</PlatformTarget>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="ModPlusAPI">
@@ -98,8 +100,11 @@
     <Compile Include="..\mprDimBias_2016\Body\GeometryHelpers.cs">
       <Link>Body\GeometryHelpers.cs</Link>
     </Compile>
-    <Compile Include="..\mprDimBias_2016\Properties\AssemblyCommonInfo.cs">
-      <Link>Properties\AssemblyCommonInfo.cs</Link>
+    <Compile Include="..\mprDimBias_2016\ModPlusConnector.cs">
+      <Link>ModPlusConnector.cs</Link>
+    </Compile>
+    <Compile Include="..\mprDimBias_2016\Properties\AssemblyInfo.cs">
+      <Link>Properties\AssemblyInfo.cs</Link>
     </Compile>
     <Compile Include="..\mprDimBias_2016\View\DimBiasSettings.xaml.cs">
       <Link>View\DimBiasSettings.xaml.cs</Link>
@@ -108,8 +113,6 @@
     <Compile Include="..\mprDimBias_2016\Work\DimensionsDilution.cs">
       <Link>Work\DimensionsDilution.cs</Link>
     </Compile>
-    <Compile Include="Interface.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <Resource Include="..\mprDimBias_2016\Resources\mprDimBias_16x16.png">
@@ -126,6 +129,7 @@
       <SubType>Designer</SubType>
     </Page>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent>if $(ConfigurationName) == Release (

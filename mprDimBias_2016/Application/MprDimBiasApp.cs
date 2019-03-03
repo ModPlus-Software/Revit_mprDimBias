@@ -105,7 +105,7 @@ namespace mprDimBias.Application
             }
             if(panel == null)
                 panel = application.CreateRibbonPanel("ModPlus", Language.TryGetCuiLocalGroupName("Аннотации"));
-            var intF = new Interface();
+            var intF = new ModPlusConnector();
             PushButtonData rid = new PushButtonData(
                 intF.Name,
                 ConvertLName(Language.GetFunctionLocalName(intF.Name, intF.LName)),
