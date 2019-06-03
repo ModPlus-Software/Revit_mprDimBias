@@ -130,7 +130,7 @@ namespace mprDimBias.Body
         {
             modified = false;
             if (!IsValid) return;
-            if (AdvancedCorrectSegments.Count != 0)
+            if (AdvancedCorrectSegments != null && AdvancedCorrectSegments.Count != 0)
             {
                 foreach (List<AdvancedDimensionSegment> advancedDimensionSegments in AdvancedCorrectSegments)
                 {
