@@ -14,6 +14,7 @@ namespace mprDimBias.Body
         {
             _updaterId = new UpdaterId(new AddInId(new ModPlusConnector().AddInId), new Guid("d6ead746-4376-4484-b900-5f63d191476f"));
         }
+
         public void Execute(UpdaterData data)
         {
             Document doc = data.GetDocument();
@@ -30,6 +31,10 @@ namespace mprDimBias.Body
                 {
                     try
                     {
+                        var equalityParameter = dimension.get_Parameter(BuiltInParameter.DIM_DISPLAY_EQ);
+                        if (dimension is SpotDimension || 
+                            (equalityParameter != null && equalityParameter.AsInteger() == 2))
+                            continue;
                         DimensionsDilution.DoDilution(dimension, doc, out bool modified);
                         if(!MprDimBiasApp.DimsModifiedByUpdater.ContainsKey(elementId))
                             MprDimBiasApp.DimsModifiedByUpdater.Add(elementId, modified);
@@ -86,6 +91,10 @@ namespace mprDimBias.Body
             {
                 if (doc.GetElement(elementId) is Dimension dimension)
                 {
+                    var equalityParameter = dimension.get_Parameter(BuiltInParameter.DIM_DISPLAY_EQ);
+                    if (dimension is SpotDimension || 
+                        (equalityParameter != null && equalityParameter.AsInteger() == 2))
+                        continue;
                     if (MprDimBiasApp.DimsModifiedByUpdater.ContainsKey(elementId))
                     {
                         if (!MprDimBiasApp.DimsModifiedByUpdater[elementId])

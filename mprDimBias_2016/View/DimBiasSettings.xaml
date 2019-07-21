@@ -3,7 +3,7 @@
                       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                       xmlns:mps="https://modplus.org/winfx/xaml/controls"
                       SizeToContent="WidthAndHeight"
-                      ShowCloseButton="False" 
+                      ShowCloseButton="False" ResizeMode="NoResize"
                       Loaded="DimBiasSettings_OnLoaded">
     <Window.Resources>
         <ResourceDictionary>
@@ -19,6 +19,8 @@
             <RowDefinition Height="Auto"></RowDefinition>
             <RowDefinition Height="Auto"></RowDefinition>
             <RowDefinition Height="Auto"></RowDefinition>
+            <RowDefinition Height="Auto"></RowDefinition>
+            <RowDefinition Height="Auto"></RowDefinition>
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*"></ColumnDefinition>
@@ -27,9 +29,23 @@
         <CheckBox Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2"
                   Content="{Binding Source={StaticResource Lang}, XPath=h2}"
                   Name="ChkOnOffDimBias"></CheckBox>
-        <CheckBox Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2"
+        <CheckBox Grid.Row="1" Grid.Column="0" VerticalAlignment="Center"
                   Content="{Binding Source={StaticResource Lang}, XPath=h3}"
                   Name="ChkOnOffDimModifyBias"></CheckBox>
+        <Viewbox Grid.Row="1" Grid.Column="1" Width="24" Height="24"
+                 HorizontalAlignment="Left" Margin="4 0 0 0"
+                 ToolTipService.InitialShowDelay="0"
+                 ToolTipService.ShowDuration="15000">
+            <Canvas Width="24" Height="24">
+                <Path Data="M13,14H11V10H13M13,18H11V16H13M1,21H23L12,2L1,21Z" Fill="DarkOrange" />
+            </Canvas>
+            <Viewbox.ToolTip>
+                <ToolTip>
+                    <TextBlock Width="400" FontSize="14" TextWrapping="Wrap"
+                               Text="{Binding Source={StaticResource Lang}, XPath=h6}"></TextBlock>
+                </ToolTip>
+            </Viewbox.ToolTip>
+        </Viewbox>
         <TextBlock Grid.Row="2" Grid.Column="0" Text="{Binding Source={StaticResource Lang}, XPath=h4}"
                    VerticalAlignment="Center" Margin="{DynamicResource ModPlusDefaultMargin}"></TextBlock>
         <mps:NumericBox Grid.Row="2" Grid.Column="1" Maximum="1.0" Minimum="0.1"
@@ -37,6 +53,18 @@
         <Button Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="2"
                 HorizontalAlignment="Center" Content="{Binding Source={StaticResource Lang}, XPath=accept}" Name="BtOk"
                 Click="BtOk_OnClick"></Button>
+        <Button Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="2"
+                Style="{DynamicResource ModPlusFlatButton}"
+                HorizontalAlignment="Center"
+                Content="{Binding Source={StaticResource Lang}, XPath=h7}"
+                Name="BtProcessSelected"
+                Click="BtProcessSelected_OnClick"></Button>
+        <Button Grid.Row="5" Grid.Column="0" Grid.ColumnSpan="2"
+                Style="{DynamicResource ModPlusFlatButton}"
+                HorizontalAlignment="Center" 
+                Content="{Binding Source={StaticResource Lang}, XPath=h8}"
+                Name="BtResetTextPositionForSelected"
+                Click="BtResetTextPositionForSelected_OnClick"></Button>
     </Grid>
 </mps:ModPlusWindow>
 

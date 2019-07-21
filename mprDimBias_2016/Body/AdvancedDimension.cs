@@ -160,7 +160,7 @@ namespace mprDimBias.Body
             {
                 if (Dimension.ValueString != null)
                 {
-                    double stringLen = Dimension.ValueString.Length * TextHeight * Scale * 0.6;
+                    double stringLen = Dimension.ValueString.Length * TextHeight * Scale * MprDimBiasApp.K;
                     double? value = Dimension.Value;
                     if (stringLen >= value.GetValueOrDefault() && value.HasValue)
                     {
