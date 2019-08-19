@@ -94,7 +94,10 @@ namespace mprDimBias.Application
         private void CreateRibbonTab(UIControlledApplication application)
         {
             RibbonPanel panel = null;
-            var rPanels = application.GetRibbonPanels("ModPlus");
+            
+            const string tabName = "ModPlus";
+            ModPlus_Revit.App.RibbonBuilder.CreateModPlusTabIfNoExist(application);
+            var rPanels = application.GetRibbonPanels(tabName);
             foreach (RibbonPanel rPanel in rPanels)
             {
                 if (rPanel.Name.Equals(Language.TryGetCuiLocalGroupName("Аннотации")))
@@ -104,7 +107,7 @@ namespace mprDimBias.Application
                 }
             }
             if(panel == null)
-                panel = application.CreateRibbonPanel("ModPlus", Language.TryGetCuiLocalGroupName("Аннотации"));
+                panel = application.CreateRibbonPanel(tabName, Language.TryGetCuiLocalGroupName("Аннотации"));
             var intF = new ModPlusConnector();
             PushButtonData rid = new PushButtonData(
                 intF.Name,
