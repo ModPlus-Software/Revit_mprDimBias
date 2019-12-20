@@ -1,8 +1,8 @@
-﻿using Autodesk.Revit.DB;
-using mprDimBias.Body;
-
-namespace mprDimBias.Work
+﻿namespace mprDimBias.Work
 {
+    using Autodesk.Revit.DB;
+    using Body;
+
     public class DimensionsDilution
     {
         /// <summary>Выполнить "разнесение" размерных значений для указанного размера</summary>
@@ -26,16 +26,17 @@ namespace mprDimBias.Work
             if (!UpdaterRegistry.IsUpdaterRegistered(updater.GetUpdaterId()))
             {
                 UpdaterRegistry.RegisterUpdater(updater, true);
-                ElementCategoryFilter f = new ElementCategoryFilter(BuiltInCategory.OST_Dimensions);
+                var f = new ElementCategoryFilter(BuiltInCategory.OST_Dimensions);
                 UpdaterRegistry.AddTrigger(updater.GetUpdaterId(), f, Element.GetChangeTypeElementAddition());
             }
         }
+
         public static void DimModifiedDilutionOn(AddInId activeAddInId,  ref DimensionsModifyDilutionUpdater modifyUpdater)
         {
             if (!UpdaterRegistry.IsUpdaterRegistered(modifyUpdater.GetUpdaterId()))
             {
                 UpdaterRegistry.RegisterUpdater(modifyUpdater, true);
-                ElementCategoryFilter f = new ElementCategoryFilter(BuiltInCategory.OST_Dimensions);
+                var f = new ElementCategoryFilter(BuiltInCategory.OST_Dimensions);
                 UpdaterRegistry.AddTrigger(modifyUpdater.GetUpdaterId(), f, Element.GetChangeTypeAny());
             }
         }
@@ -47,6 +48,7 @@ namespace mprDimBias.Work
                 UpdaterRegistry.UnregisterUpdater(updater.GetUpdaterId());
             }
         }
+
         public static void DimModifiedDilutionOff(AddInId activeAddInId, ref DimensionsModifyDilutionUpdater modifyUpdater)
         {
             if (UpdaterRegistry.IsUpdaterRegistered(modifyUpdater.GetUpdaterId()))
@@ -54,6 +56,7 @@ namespace mprDimBias.Work
                 UpdaterRegistry.UnregisterUpdater(modifyUpdater.GetUpdaterId());
             }
         }
+
         public static void DimDilutionStatus(AddInId activeAddInId, ref DimensionsDilutionUpdater updater)
         {
             if (updater != null)
@@ -64,10 +67,11 @@ namespace mprDimBias.Work
             {
                 updater = new DimensionsDilutionUpdater();
                 UpdaterRegistry.RegisterUpdater(updater, false);
-                ElementCategoryFilter f = new ElementCategoryFilter(BuiltInCategory.OST_Dimensions);
+                var f = new ElementCategoryFilter(BuiltInCategory.OST_Dimensions);
                 UpdaterRegistry.AddTrigger(updater.GetUpdaterId(), f, Element.GetChangeTypeElementAddition());
             }
         }
+
         public static void DimModifiedDilutionStatus(AddInId activeAddInId, ref DimensionsModifyDilutionUpdater modifyUpdater)
         {
             if (modifyUpdater != null)
@@ -78,7 +82,7 @@ namespace mprDimBias.Work
             {
                 modifyUpdater = new DimensionsModifyDilutionUpdater();
                 UpdaterRegistry.RegisterUpdater(modifyUpdater, false);
-                ElementCategoryFilter f = new ElementCategoryFilter(BuiltInCategory.OST_Dimensions);
+                var f = new ElementCategoryFilter(BuiltInCategory.OST_Dimensions);
                 UpdaterRegistry.AddTrigger(modifyUpdater.GetUpdaterId(), f, Element.GetChangeTypeAny());
             }
         }

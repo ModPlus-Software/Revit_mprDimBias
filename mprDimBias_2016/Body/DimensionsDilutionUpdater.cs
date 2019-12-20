@@ -1,11 +1,11 @@
-﻿using System;
-using Autodesk.Revit.DB;
-using mprDimBias.Application;
-using mprDimBias.Work;
-using ModPlusAPI.Windows;
-
-namespace mprDimBias.Body
+﻿namespace mprDimBias.Body
 {
+    using System;
+    using Application;
+    using Autodesk.Revit.DB;
+    using ModPlusAPI.Windows;
+    using Work;
+
     public class DimensionsDilutionUpdater : IUpdater
     {
         private static UpdaterId _updaterId;
@@ -17,15 +17,15 @@ namespace mprDimBias.Body
 
         public void Execute(UpdaterData data)
         {
-            Document doc = data.GetDocument();
-            if(doc?.ActiveView == null)
+            var doc = data.GetDocument();
+            if (doc?.ActiveView == null)
                 return;
-            if(doc.IsFamilyDocument)
+            if (doc.IsFamilyDocument)
                 return;
             if (MprDimBiasApp.IsSyncInWork)
                 return;
 
-            foreach (ElementId elementId in data.GetAddedElementIds())
+            foreach (var elementId in data.GetAddedElementIds())
             {
                 if (doc.GetElement(elementId) is Dimension dimension)
                 {
@@ -35,8 +35,8 @@ namespace mprDimBias.Body
                         if (dimension is SpotDimension || 
                             (equalityParameter != null && equalityParameter.AsInteger() == 2))
                             continue;
-                        DimensionsDilution.DoDilution(dimension, doc, out bool modified);
-                        if(!MprDimBiasApp.DimsModifiedByUpdater.ContainsKey(elementId))
+                        DimensionsDilution.DoDilution(dimension, doc, out var modified);
+                        if (!MprDimBiasApp.DimsModifiedByUpdater.ContainsKey(elementId))
                             MprDimBiasApp.DimsModifiedByUpdater.Add(elementId, modified);
                     }
                     catch (Exception exception)
@@ -66,7 +66,6 @@ namespace mprDimBias.Body
         {
             return string.Empty;
         }
-        
     }
 
     public class DimensionsModifyDilutionUpdater : IUpdater
@@ -77,9 +76,10 @@ namespace mprDimBias.Body
         {
             _updaterId = new UpdaterId(new AddInId(new ModPlusConnector().AddInId), new Guid("25877119-32d3-4c0b-8782-33afd1ccbe05"));
         }
+
         public void Execute(UpdaterData data)
         {
-            Document doc = data.GetDocument();
+            var doc = data.GetDocument();
             if (doc?.ActiveView == null)
                 return;
             if (doc.IsFamilyDocument)
@@ -87,7 +87,7 @@ namespace mprDimBias.Body
             if (MprDimBiasApp.IsSyncInWork)
                 return;
 
-            foreach (ElementId elementId in data.GetModifiedElementIds())
+            foreach (var elementId in data.GetModifiedElementIds())
             {
                 if (doc.GetElement(elementId) is Dimension dimension)
                 {
@@ -101,7 +101,7 @@ namespace mprDimBias.Body
                         {
                             try
                             {
-                                DimensionsDilution.DoDilution(dimension, doc, out bool modified);
+                                DimensionsDilution.DoDilution(dimension, doc, out var modified);
                                 MprDimBiasApp.DimsModifiedByUpdater[elementId] = modified;
                             }
                             catch (Exception exception)
@@ -109,13 +109,16 @@ namespace mprDimBias.Body
                                 ExceptionBox.Show(exception);
                             }
                         }
-                        else MprDimBiasApp.DimsModifiedByUpdater[elementId] = false;
+                        else
+                        {
+                            MprDimBiasApp.DimsModifiedByUpdater[elementId] = false;
+                        }
                     }
                     else
                     {
                         try
                         {
-                            DimensionsDilution.DoDilution(dimension, doc, out bool modified);
+                            DimensionsDilution.DoDilution(dimension, doc, out var modified);
                             if (!MprDimBiasApp.DimsModifiedByUpdater.ContainsKey(elementId))
                                 MprDimBiasApp.DimsModifiedByUpdater.Add(elementId, modified);
                         }
@@ -147,6 +150,5 @@ namespace mprDimBias.Body
         {
             return string.Empty;
         }
-
     }
 }

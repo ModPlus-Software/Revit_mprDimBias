@@ -1,9 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using ModPlusAPI.Interfaces;
-
+﻿#pragma warning disable SA1600 // Elements should be documented
 namespace mprDimBias
 {
+    using System;
+    using System.Collections.Generic;
+    using ModPlusAPI.Interfaces;
+
     public class ModPlusConnector : IModPlusFunctionInterface
     {
         public SupportedProduct SupportedProduct => SupportedProduct.Revit;
@@ -38,9 +39,9 @@ namespace mprDimBias
         
         public bool CanAddToRibbon => false;
         
-        public string FullDescription => "Функция следит за всеми создающимися размерами и, в случае если размерный текст попадает на размерные линии, смещает размерный текст в сторону";
+        public string FullDescription => "Плагин следит за всеми создающимися размерами и, в случае если размерный текст попадает на размерные линии, смещает размерный текст в сторону";
         
-        public string ToolTipHelpImage => "";
+        public string ToolTipHelpImage => string.Empty;
         
         public List<string> SubFunctionsNames => new List<string>();
         
@@ -55,3 +56,4 @@ namespace mprDimBias
         public List<string> SubClassNames => new List<string>();
     }
 }
+#pragma warning restore SA1600 // Elements should be documented

@@ -1,19 +1,18 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Globalization;
-using System.Linq;
-using System.Reflection;
-using Autodesk.Revit.DB;
-using Autodesk.Revit.UI;
-using mprDimBias.Body;
-using mprDimBias.Work;
-using ModPlusAPI;
-using ModPlusAPI.Windows;
-
-namespace mprDimBias.Application
+﻿namespace mprDimBias.Application
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Globalization;
+    using System.Linq;
+    using System.Reflection;
+    using Autodesk.Revit.DB;
     using Autodesk.Revit.DB.Events;
+    using Autodesk.Revit.UI;
     using Autodesk.Revit.UI.Events;
+    using Body;
+    using ModPlusAPI;
+    using ModPlusAPI.Windows;
+    using Work;
 
     public class MprDimBiasApp : IExternalApplication
     {
@@ -23,26 +22,23 @@ namespace mprDimBias.Application
         public static UIControlledApplication Application;
         public static double K;
         public static bool IsSyncInWork;
-        // todo - ссылка уже есть выше. Убрать!
-        private UIControlledApplication _controlledApplication;
-
+        
         public Result OnStartup(UIControlledApplication application)
         {
             try
             {
-                _controlledApplication = application;
-                _controlledApplication.Idling += ApplicationOnIdling;
+                Application = application;
+                Application.Idling += ApplicationOnIdling;
 
                 DimsModifiedByUpdater = new Dictionary<ElementId, bool>();
-                Application = application;
 
-                var dimDilWorkVar = bool.TryParse(UserConfigFile.GetValue(UserConfigFile.ConfigFileZone.Settings,
-                                        "mprDimBias", "DimBiasOnOff"), out var b) && b;
+                var dimDilWorkVar = 
+                    bool.TryParse(UserConfigFile.GetValue("mprDimBias", "DimBiasOnOff"), out var b) && b;
 
-                var dimModifiedDilWorkVar = bool.TryParse(UserConfigFile.GetValue(UserConfigFile.ConfigFileZone.Settings,
-                                        "mprDimBias", "ModifiedDimBiasOnOff"), out b) && b;
+                var dimModifiedDilWorkVar = 
+                    bool.TryParse(UserConfigFile.GetValue("mprDimBias", "ModifiedDimBiasOnOff"), out b) && b;
 
-                K = double.TryParse(UserConfigFile.GetValue(UserConfigFile.ConfigFileZone.Settings,  "mprDimBias", "K"),NumberStyles.Number, CultureInfo.InvariantCulture, out var d)
+                K = double.TryParse(UserConfigFile.GetValue("mprDimBias", "K"), NumberStyles.Number, CultureInfo.InvariantCulture, out var d)
                     ? d
                     : 0.6;
 
@@ -50,10 +46,12 @@ namespace mprDimBias.Application
                 DimensionsModifyDilutionUpdater = new DimensionsModifyDilutionUpdater();
                 if (dimDilWorkVar)
                     DimensionsDilution.DimDilutionOn(application.ActiveAddInId, ref DimensionsDilutionUpdater);
-                else DimensionsDilution.DimDilutionOff(application.ActiveAddInId, ref DimensionsDilutionUpdater);
+                else
+                    DimensionsDilution.DimDilutionOff(application.ActiveAddInId, ref DimensionsDilutionUpdater);
                 if (dimModifiedDilWorkVar)
                     DimensionsDilution.DimModifiedDilutionOn(application.ActiveAddInId, ref DimensionsModifyDilutionUpdater);
-                else DimensionsDilution.DimModifiedDilutionOff(application.ActiveAddInId, ref DimensionsModifyDilutionUpdater);
+                else
+                    DimensionsDilution.DimModifiedDilutionOff(application.ActiveAddInId, ref DimensionsModifyDilutionUpdater);
 
                 // create ribbon tab
                 CreateRibbonTab(application);
@@ -63,6 +61,7 @@ namespace mprDimBias.Application
                 ExceptionBox.Show(exception);
                 return Result.Failed;
             }
+
             return Result.Succeeded;
         }
 
@@ -70,7 +69,7 @@ namespace mprDimBias.Application
         {
             if (sender is UIApplication uiApplication)
             {
-                _controlledApplication.Idling -= ApplicationOnIdling;
+                Application.Idling -= ApplicationOnIdling;
                 uiApplication.Application.DocumentSynchronizingWithCentral += ApplicationOnDocumentSynchronizingWithCentral;
                 uiApplication.Application.DocumentSynchronizedWithCentral += ApplicationOnDocumentSynchronizedWithCentral;
             }
@@ -106,33 +105,36 @@ namespace mprDimBias.Application
                     break;
                 }
             }
-            if(panel == null)
+
+            if (panel == null)
                 panel = application.CreateRibbonPanel(tabName, Language.TryGetCuiLocalGroupName("Аннотации"));
             var intF = new ModPlusConnector();
-            PushButtonData rid = new PushButtonData(
+            var rid = new PushButtonData(
                 intF.Name,
-                ConvertLName(Language.GetFunctionLocalName(intF.Name, intF.LName)),
+                ConvertLName(Language.GetFunctionLocalName(intF)),
                 Assembly.GetExecutingAssembly().Location,
                 intF.FullClassName)
             {
-                LargeImage = new System.Windows.Media.Imaging.BitmapImage(new Uri("pack://application:,,,/mprDimBias_" +
-                                                     intF.AvailProductExternalVersion +
-                                                     ";component/Resources/mprDimBias_32x32.png"))
+                LargeImage = new System.Windows.Media.Imaging.BitmapImage(
+                    new Uri("pack://application:,,,/mprDimBias_" + intF.AvailProductExternalVersion + ";component/Resources/mprDimBias_32x32.png"))
             };
-            rid.ToolTip = Language.GetFunctionShortDescrition(intF.Name, intF.Description);
-            rid.LongDescription = Language.GetFunctionFullDescription(intF.Name, intF.FullDescription);
+            rid.ToolTip = Language.GetFunctionShortDescription(intF);
+            rid.LongDescription = Language.GetFunctionFullDescription(intF);
             rid.SetContextualHelp(new ContextualHelp(ContextualHelpType.Url, ModPlus_Revit.App.RibbonBuilder.GetHelpUrl(intF.Name)));
             panel.AddItem(rid);
         }
 
         private static string ConvertLName(string lName)
         {
-            if (!lName.Contains(" ")) return lName;
-            if (lName.Length <= 8) return lName;
+            if (!lName.Contains(" "))
+                return lName;
+            if (lName.Length <= 8)
+                return lName;
             if (lName.Count(x => x == ' ') == 1)
             {
                 return lName.Split(' ')[0] + Environment.NewLine + lName.Split(' ')[1];
             }
+
             var center = lName.Length * 0.5;
             var nearestDelta = lName.Select((c, i) => new { index = i, value = c }).Where(w => w.value == ' ')
                 .OrderBy(x => Math.Abs(x.index - center)).First().index;

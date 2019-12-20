@@ -1,11 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using Autodesk.Revit.DB;
-using mprDimBias.Application;
-
-namespace mprDimBias.Body
+﻿namespace mprDimBias.Body
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using Application;
+    using Autodesk.Revit.DB;
+
     public class AdvancedDimension
     {
         #region Constructor
@@ -14,19 +14,22 @@ namespace mprDimBias.Body
         {
             AdvancedSegments = new List<AdvancedDimensionSegment>();
             Dimension = dimension;
+
             // Получаю высоту текста размера из его типа
             TextHeight = dimension.DimensionType.get_Parameter(BuiltInParameter.TEXT_SIZE).AsDouble();
+
             // get scale
             Scale = doc.ActiveView.Scale;
 
             if (Dimension.DimensionShape == DimensionShape.Linear)
             {
                 // dimension segments
-                List<DimensionSegment> tempDimensionSegments = new List<DimensionSegment>();
+                var tempDimensionSegments = new List<DimensionSegment>();
                 foreach (DimensionSegment segment in Dimension.Segments)
                 {
                     tempDimensionSegments.Add(segment);
                 }
+
                 if (tempDimensionSegments.Count == 1)
                 {
                     AdvancedSegments.Add(new AdvancedDimensionSegment(tempDimensionSegments[0], null, null));
@@ -59,6 +62,7 @@ namespace mprDimBias.Body
                         }
                     }
                 }
+
                 AdvancedCorrectSegments = new List<List<AdvancedDimensionSegment>>();
                 AdvancedSegments.ForEach(s => s.SetCorrectStatus(TextHeight, Scale));
                 for (var i = 0; i < AdvancedSegments.Count; i++)
@@ -75,6 +79,7 @@ namespace mprDimBias.Body
                         AdvancedCorrectSegments.Add(new List<AdvancedDimensionSegment>());
                     }
                 }
+
                 for (var i = AdvancedCorrectSegments.Count - 1; i >= 0; i--)
                 {
                     if (AdvancedCorrectSegments[i].Count == 0)
@@ -86,7 +91,10 @@ namespace mprDimBias.Body
                     Info = new DimInfo(doc.ActiveView, line.Direction);
                     IsValid = true;
                 }
-                else IsValid = true;
+                else
+                {
+                    IsValid = true;
+                }
             }
             else if (Dimension.DimensionShape == DimensionShape.Radial || Dimension.DimensionShape == DimensionShape.Diameter)
             {
@@ -96,15 +104,22 @@ namespace mprDimBias.Body
                     Info = new DimInfo(doc.ActiveView, directionVector);
                     IsValid = true;
                 }
-                else IsValid = false;
+                else
+                {
+                    IsValid = false;
+                }
             }
-            else IsValid = false;
+            else
+            {
+                IsValid = false;
+            }
         }
         #endregion
 
         #region Fields
 
         public Dimension Dimension;
+
         /// <summary>Высота текста размера</summary>
         public double TextHeight;
 
@@ -120,6 +135,7 @@ namespace mprDimBias.Body
         #region Parameters
 
         public List<AdvancedDimensionSegment> AdvancedSegments { get; set; }
+        
         public List<List<AdvancedDimensionSegment>> AdvancedCorrectSegments { get; set; }
 
         #endregion
@@ -129,16 +145,17 @@ namespace mprDimBias.Body
         public void SetMoveForCorrect(out bool modified)
         {
             modified = false;
-            if (!IsValid) return;
+            if (!IsValid)
+                return;
             if (AdvancedCorrectSegments != null && AdvancedCorrectSegments.Count != 0)
             {
-                foreach (List<AdvancedDimensionSegment> advancedDimensionSegments in AdvancedCorrectSegments)
+                foreach (var advancedDimensionSegments in AdvancedCorrectSegments)
                 {
-                    List<List<AdvancedDimensionSegment>> tempPl = new List<List<AdvancedDimensionSegment>>()
+                    var tempPl = new List<List<AdvancedDimensionSegment>>()
                     {
                         new List<AdvancedDimensionSegment> { advancedDimensionSegments[0]}
                     };
-                    for (int i = 1; i < advancedDimensionSegments.Count; i++)
+                    for (var i = 1; i < advancedDimensionSegments.Count; i++)
                     {
                         if (tempPl.Last().Last().AfterSegment == null)
                         {
@@ -149,19 +166,21 @@ namespace mprDimBias.Body
                             tempPl.Last().Add(advancedDimensionSegments[i]);
                         }
                     }
-                    foreach (List<AdvancedDimensionSegment> sets in tempPl)
+
+                    foreach (var sets in tempPl)
                     {
                         CorrectDimTolerance(sets);
                     }
                 }
+
                 modified = true;
             }
             else
             {
                 if (Dimension.ValueString != null)
                 {
-                    double stringLen = Dimension.ValueString.Length * TextHeight * Scale * MprDimBiasApp.K;
-                    double? value = Dimension.Value;
+                    var stringLen = Dimension.ValueString.Length * TextHeight * Scale * MprDimBiasApp.K;
+                    var value = Dimension.Value;
                     if (stringLen >= value.GetValueOrDefault() && value.HasValue)
                     {
                         modified = true;
@@ -178,17 +197,19 @@ namespace mprDimBias.Body
 
         private void CorrectDimTolerance(List<AdvancedDimensionSegment> sets)
         {
-            AdvancedDimensionSegment last = sets.FirstOrDefault(x => x.IsLast);
+            var last = sets.FirstOrDefault(x => x.IsLast);
             if (last != null)
             {
                 SimpleMoveSegm(last, -1);
             }
-            AdvancedDimensionSegment first = sets.FirstOrDefault(x => x.IsFirst);
+
+            var first = sets.FirstOrDefault(x => x.IsFirst);
             if (first != null)
             {
                 this.SimpleMoveSegm(first, 1);
             }
-            List<AdvancedDimensionSegment> middle = (
+
+            var middle = (
                 from x in sets
                 where !x.IsFirst && !x.IsLast
                 select x).ToList();
@@ -198,12 +219,13 @@ namespace mprDimBias.Body
 
         private void SetToleranceForMidle(List<AdvancedDimensionSegment> middle)
         {
-            int horVector = 1;
-            int vertVector = 0;
-            int maxVertVector = Math.Max(Convert.ToInt32(Math.Ceiling((double)middle.Count / 3)), 2);
-            int siegth = 1;
+            var horVector = 1;
+            var vertVector = 0;
+            var maxVertVector = Math.Max(Convert.ToInt32(Math.Ceiling((double)middle.Count / 3)), 2);
+            var siegth = 1;
+
             // Если всего один размерный сегмент, то вертикальный вектор смещения будет зависеть от ширины соседнего сегмента
-            for (int i = 0; i < middle.Count; i++)
+            for (var i = 0; i < middle.Count; i++)
             {
                 var leftSegment = middle[i].BeforeSegment;
                 var rightSegment = middle[i].AfterSegment;
@@ -231,33 +253,39 @@ namespace mprDimBias.Body
                         vertVector = 1;
                     }
                     else
+                    {
                         vertVector++;
+                    }
 
                     if (rightSegment.Value != null && leftSegment.Value != null)
                     {
                         if (rightSegment.Value > leftSegment.Value)
                             horVector = -1;
-                        else horVector = 1;
+                        else
+                            horVector = 1;
                     }
 
                     ComplexMoveSegm(middle[i], horVector, vertVector * siegth, i);
                 }
             }
         }
+
         private void ComplexMoveSegm(AdvancedDimensionSegment segm, int horVector, int vertVector, int number)
         {
             segm.Segment.ResetTextPosition();
-            XYZ p1 = segm.Segment.TextPosition;
+            var p1 = segm.Segment.TextPosition;
             p1 = GeometryHelpers.MoveByViewCorrectDirComplex(p1, Info, segm.StringLenght, TextHeight * Scale * 2 * vertVector, horVector, number);
             segm.Segment.TextPosition = p1;
         }
+
         private void SimpleMove(double stringLen, int vector)
         {
             Dimension.ResetTextPosition();
-            XYZ p1 = Dimension.TextPosition;
+            var p1 = Dimension.TextPosition;
             p1 = GeometryHelpers.MoveByViewCorrectDir(p1, Info, stringLen, vector);
             Dimension.TextPosition = p1;
         }
+
         private void SimpleMoveSegm(AdvancedDimensionSegment segm, int vector)
         {
             if (segm.BeforeSegment != null && segm.AfterSegment != null &&
@@ -266,8 +294,9 @@ namespace mprDimBias.Body
                 if (segm.BeforeSegment.Value.Value > segm.AfterSegment.Value.Value)
                     vector *= -1;
             }
+
             segm.Segment.ResetTextPosition();
-            XYZ p1 = segm.Segment.TextPosition;
+            var p1 = segm.Segment.TextPosition;
             p1 = GeometryHelpers.MoveByViewCorrectDir(p1, Info, segm.StringLenght, vector);
             segm.Segment.TextPosition = p1;
         }
@@ -275,8 +304,10 @@ namespace mprDimBias.Body
         private bool HasFreeSpace(AdvancedDimensionSegment segmentToMove, DimensionSegment segmentToCheck)
         {
             var stringLenght = segmentToCheck.ValueString.Length * Scale * TextHeight;
-            if (segmentToMove.Value * 2 < (segmentToCheck.Value - stringLenght) / 2) return true;
-            else return false;
+            if (segmentToMove.Value * 2 < (segmentToCheck.Value - stringLenght) / 2)
+                return true;
+            
+            return false;
         }
 
         #endregion
