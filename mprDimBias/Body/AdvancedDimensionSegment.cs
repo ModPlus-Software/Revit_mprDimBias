@@ -5,8 +5,6 @@
 
     public class AdvancedDimensionSegment
     {
-#region Constructor
-
         public AdvancedDimensionSegment()
         {
             IsFirst = false;
@@ -37,7 +35,6 @@
 
             PosXyz = Segment.TextPosition;
         }
-#endregion
 
         public DimensionSegment AfterSegment { get; set; }
 
@@ -59,8 +56,6 @@
 
         public string ValueString { get; set; }
 
-#region Public Methods
-
         public void SetCorrectStatus(double scale, double textSize)
         {
             if (Segment.IsTextPositionAdjustable())
@@ -73,6 +68,5 @@
                 NeedCorrect = false;
             }
         }
-#endregion
     }
 }

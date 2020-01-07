@@ -48,7 +48,7 @@
         </Viewbox>
         <TextBlock Grid.Row="2" Grid.Column="0" Text="{Binding Source={StaticResource Lang}, XPath=h4}"
                    VerticalAlignment="Center" Margin="{DynamicResource ModPlusDefaultMargin}"></TextBlock>
-        <mps:NumericBox Grid.Row="2" Grid.Column="1" Maximum="1.0" Minimum="0.1"
+        <mps:NumericBox Grid.Row="2" Grid.Column="1" Maximum="2.0" Minimum="0.1"
                         Interval="0.05" Name="TbK" Width="80" TextAlignment="Left"></mps:NumericBox>
         <Button Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="2"
                 HorizontalAlignment="Center" Content="{Binding Source={StaticResource Lang}, XPath=accept}" Name="BtOk"

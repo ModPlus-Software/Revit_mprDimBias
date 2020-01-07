@@ -57,7 +57,7 @@
         {
             if (TbK.Value != null)
             {
-                if (TbK.Value.Value < 0.1 || TbK.Value.Value > 1.0)
+                if (TbK.Value.Value < 0.1 || TbK.Value.Value > 2.0)
                 {
                     ModPlusAPI.Windows.MessageBox.Show(ModPlusAPI.Language.GetItem(LangItem, "h5"), MessageBoxIcon.Alert);
                     return;
