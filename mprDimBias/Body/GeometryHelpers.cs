@@ -7,12 +7,6 @@
 
     public static class GeometryHelpers
     {
-        public static double GetViewPlanCutPlaneElevation(ViewPlan viewPlan, Document doc)
-        {
-            var planViewRange = viewPlan.GetViewRange();
-            return planViewRange.GetOffset(PlanViewPlane.CutPlane) + viewPlan.GenLevel.Elevation;
-        }
-
         #region Dimensions Dilution
 
         public static DimDirection GetDirFromVector(XYZ vec)
