@@ -15,12 +15,13 @@
     </Window.Resources>
     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition Height="Auto"></RowDefinition>
-            <RowDefinition Height="Auto"></RowDefinition>
-            <RowDefinition Height="Auto"></RowDefinition>
-            <RowDefinition Height="Auto"></RowDefinition>
-            <RowDefinition Height="Auto"></RowDefinition>
-            <RowDefinition Height="Auto"></RowDefinition>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*"></ColumnDefinition>
@@ -49,17 +50,24 @@
         <TextBlock Grid.Row="2" Grid.Column="0" Text="{Binding Source={StaticResource Lang}, XPath=h4}"
                    VerticalAlignment="Center" Margin="{DynamicResource ModPlusDefaultMargin}"></TextBlock>
         <mps:NumericBox Grid.Row="2" Grid.Column="1" Maximum="2.0" Minimum="0.1"
+                        Value="0.6"
                         Interval="0.05" Name="TbK" Width="80" TextAlignment="Left"></mps:NumericBox>
-        <Button Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="2"
+        <CheckBox Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="2"
+                  Content="{Binding Source={StaticResource Lang}, XPath=h11}"
+                  ToolTip="{Binding Source={StaticResource Lang}, XPath=h12}"
+                  ToolTipService.InitialShowDelay="200"
+                  ToolTipService.ShowDuration="15000"
+                  Name="ChkMoveDownInsteadSide"></CheckBox>
+        <Button Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="2"
                 HorizontalAlignment="Center" Content="{Binding Source={StaticResource Lang}, XPath=accept}" Name="BtOk"
                 Click="BtOk_OnClick"></Button>
-        <Button Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="2"
+        <Button Grid.Row="5" Grid.Column="0" Grid.ColumnSpan="2"
                 Style="{DynamicResource ModPlusFlatButton}"
                 HorizontalAlignment="Center"
                 Content="{Binding Source={StaticResource Lang}, XPath=h7}"
                 Name="BtProcessSelected"
                 Click="BtProcessSelected_OnClick"></Button>
-        <Button Grid.Row="5" Grid.Column="0" Grid.ColumnSpan="2"
+        <Button Grid.Row="6" Grid.Column="0" Grid.ColumnSpan="2"
                 Style="{DynamicResource ModPlusFlatButton}"
                 HorizontalAlignment="Center" 
                 Content="{Binding Source={StaticResource Lang}, XPath=h8}"

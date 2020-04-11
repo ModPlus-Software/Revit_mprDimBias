@@ -16,19 +16,40 @@
 
     public class MprDimBiasApp : IExternalApplication
     {
-        public static DimensionsDilutionUpdater DimensionsDilutionUpdater;
-        public static DimensionsModifyDilutionUpdater DimensionsModifyDilutionUpdater;
-        public static Dictionary<ElementId, bool> DimsModifiedByUpdater;
-        public static UIControlledApplication Application;
-        public static double K;
-        public static bool IsSyncInWork;
+        private static UIControlledApplication _application;
         
+        /// <summary>
+        /// Идентификаторы размеров, смещенных при работе текущего плагина
+        /// </summary>
+        public static Dictionary<ElementId, bool> DimsModifiedByUpdater { get; private set; }
+
+        /// <summary>
+        /// Коэффициент смещения
+        /// </summary>
+        public static double OffsetFactor { get; set; }
+
+        /// <summary>
+        /// Is synchronization with central model in work
+        /// </summary>
+        public static bool IsSyncInWork { get; private set; }
+
+        /// <summary>
+        /// Static instance of <see cref="DimensionsDilutionUpdater"/>
+        /// </summary>
+        public static DimensionsDilutionUpdater DimensionsDilutionUpdater { get; private set; }
+
+        /// <summary>
+        /// Static instance of <see cref="DimensionsModifyDilutionUpdater"/>
+        /// </summary>
+        public static DimensionsModifyDilutionUpdater DimensionsModifyDilutionUpdater { get; private set; }
+
+        /// <inheritdoc/>
         public Result OnStartup(UIControlledApplication application)
         {
             try
             {
-                Application = application;
-                Application.Idling += ApplicationOnIdling;
+                _application = application;
+                _application.Idling += ApplicationOnIdling;
 
                 DimsModifiedByUpdater = new Dictionary<ElementId, bool>();
 
@@ -38,20 +59,20 @@
                 var dimModifiedDilWorkVar = 
                     bool.TryParse(UserConfigFile.GetValue("mprDimBias", "ModifiedDimBiasOnOff"), out b) && b;
 
-                K = double.TryParse(UserConfigFile.GetValue("mprDimBias", "K"), NumberStyles.Number, CultureInfo.InvariantCulture, out var d)
+                OffsetFactor = double.TryParse(UserConfigFile.GetValue("mprDimBias", "K"), NumberStyles.Number, CultureInfo.InvariantCulture, out var d)
                     ? d
                     : 0.6;
 
                 DimensionsDilutionUpdater = new DimensionsDilutionUpdater();
                 DimensionsModifyDilutionUpdater = new DimensionsModifyDilutionUpdater();
                 if (dimDilWorkVar)
-                    DimensionsDilution.DimDilutionOn(application.ActiveAddInId, ref DimensionsDilutionUpdater);
+                    DimensionsDilution.DimDilutionOn(DimensionsDilutionUpdater);
                 else
-                    DimensionsDilution.DimDilutionOff(application.ActiveAddInId, ref DimensionsDilutionUpdater);
+                    DimensionsDilution.DimDilutionOff(DimensionsDilutionUpdater);
                 if (dimModifiedDilWorkVar)
-                    DimensionsDilution.DimModifiedDilutionOn(application.ActiveAddInId, ref DimensionsModifyDilutionUpdater);
+                    DimensionsDilution.DimModifiedDilutionOn(DimensionsModifyDilutionUpdater);
                 else
-                    DimensionsDilution.DimModifiedDilutionOff(application.ActiveAddInId, ref DimensionsModifyDilutionUpdater);
+                    DimensionsDilution.DimModifiedDilutionOff(DimensionsModifyDilutionUpdater);
 
                 // create ribbon tab
                 CreateRibbonTab(application);
@@ -65,39 +86,40 @@
             return Result.Succeeded;
         }
 
-        private void ApplicationOnIdling(object sender, IdlingEventArgs e)
-        {
-            if (sender is UIApplication uiApplication)
-            {
-                Application.Idling -= ApplicationOnIdling;
-                uiApplication.Application.DocumentSynchronizingWithCentral += ApplicationOnDocumentSynchronizingWithCentral;
-                uiApplication.Application.DocumentSynchronizedWithCentral += ApplicationOnDocumentSynchronizedWithCentral;
-            }
-        }
-
-        private void ApplicationOnDocumentSynchronizedWithCentral(object sender, DocumentSynchronizedWithCentralEventArgs e)
-        {
-            IsSyncInWork = false;
-        }
-
-        private void ApplicationOnDocumentSynchronizingWithCentral(object sender, DocumentSynchronizingWithCentralEventArgs e)
-        {
-            IsSyncInWork = true;
-        }
-
+        /// <inheritdoc />
         public Result OnShutdown(UIControlledApplication application)
         {
             return Result.Succeeded;
         }
 
-        private void CreateRibbonTab(UIControlledApplication application)
+        private static void ApplicationOnIdling(object sender, IdlingEventArgs e)
+        {
+            if (sender is UIApplication uiApplication)
+            {
+                _application.Idling -= ApplicationOnIdling;
+                uiApplication.Application.DocumentSynchronizingWithCentral += ApplicationOnDocumentSynchronizingWithCentral;
+                uiApplication.Application.DocumentSynchronizedWithCentral += ApplicationOnDocumentSynchronizedWithCentral;
+            }
+        }
+
+        private static void ApplicationOnDocumentSynchronizedWithCentral(object sender, DocumentSynchronizedWithCentralEventArgs e)
+        {
+            IsSyncInWork = false;
+        }
+
+        private static void ApplicationOnDocumentSynchronizingWithCentral(object sender, DocumentSynchronizingWithCentralEventArgs e)
+        {
+            IsSyncInWork = true;
+        }
+
+        private static void CreateRibbonTab(UIControlledApplication application)
         {
             RibbonPanel panel = null;
             
             const string tabName = "ModPlus";
             ModPlus_Revit.App.RibbonBuilder.CreateModPlusTabIfNoExist(application);
             var rPanels = application.GetRibbonPanels(tabName);
-            foreach (RibbonPanel rPanel in rPanels)
+            foreach (var rPanel in rPanels)
             {
                 if (rPanel.Name.Equals(Language.TryGetCuiLocalGroupName("Аннотации")))
                 {

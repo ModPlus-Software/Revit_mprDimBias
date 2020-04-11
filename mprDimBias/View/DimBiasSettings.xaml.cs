@@ -9,14 +9,15 @@
     using Autodesk.Revit.DB;
     using Autodesk.Revit.UI;
     using Autodesk.Revit.UI.Selection;
+    using Body;
     using ModPlusAPI;
     using ModPlusAPI.Windows;
     using Work;
 
     public partial class DimBiasSettings
     {
-        private readonly UIApplication _uiApplication;
         private const string LangItem = "mprDimBias";
+        private readonly UIApplication _uiApplication;
 
         public DimBiasSettings(UIApplication uiApplication)
         {
@@ -25,32 +26,40 @@
             Title = ModPlusAPI.Language.GetItem(LangItem, "h1");
         }
 
-        private void ChkOnOffDimBias_OnChecked(object sender, RoutedEventArgs e)
+        private static void ChkOnOffDimBias_OnChecked(object sender, RoutedEventArgs e)
         {
-            UserConfigFile.SetValue("mprDimBias", "DimBiasOnOff", true.ToString(), true);
-            var addInId = new AddInId(new ModPlusConnector().AddInId);
-            DimensionsDilution.DimDilutionOn(addInId, ref MprDimBiasApp.DimensionsDilutionUpdater);
+            UserConfigFile.SetValue(LangItem, "DimBiasOnOff", true.ToString(), true);
+            DimensionsDilution.DimDilutionOn(MprDimBiasApp.DimensionsDilutionUpdater);
         }
 
-        private void ChkOnOffDimBias_OnUnchecked(object sender, RoutedEventArgs e)
+        private static void ChkOnOffDimBias_OnUnchecked(object sender, RoutedEventArgs e)
         {
-            UserConfigFile.SetValue("mprDimBias", "DimBiasOnOff", false.ToString(), true);
-            var addInId = new AddInId(new ModPlusConnector().AddInId);
-            DimensionsDilution.DimDilutionOff(addInId, ref MprDimBiasApp.DimensionsDilutionUpdater);
+            UserConfigFile.SetValue(LangItem, "DimBiasOnOff", false.ToString(), true);
+            DimensionsDilution.DimDilutionOff(MprDimBiasApp.DimensionsDilutionUpdater);
         }
 
-        private void ChkOnOffDimModifyBias_Checked(object sender, RoutedEventArgs e)
+        private static void ChkOnOffDimModifyBias_Checked(object sender, RoutedEventArgs e)
         {
-            UserConfigFile.SetValue("mprDimBias", "ModifiedDimBiasOnOff", true.ToString(), true);
-            var addInId = new AddInId(new ModPlusConnector().AddInId);
-            DimensionsDilution.DimModifiedDilutionOn(addInId, ref MprDimBiasApp.DimensionsModifyDilutionUpdater);
+            var showNotification = !bool.TryParse(UserConfigFile.GetValue(LangItem, "ShowNotification"), out var b) || b;
+            if (showNotification)
+            {
+                var hideNotification = ModPlusAPI.Windows.MessageBox.Show(
+                    ModPlusAPI.Language.GetItem(LangItem, "h6"),
+                    ModPlusAPI.Language.GetFunctionLocalName(new ModPlusConnector()),
+                    ModPlusAPI.Language.GetItem(LangItem, "h10"),
+                    MessageBoxIcon.Alert);
+                if (hideNotification)
+                    UserConfigFile.SetValue(LangItem, "ShowNotification", false.ToString(), true);
+            }
+
+            UserConfigFile.SetValue(LangItem, "ModifiedDimBiasOnOff", true.ToString(), true);
+            DimensionsDilution.DimModifiedDilutionOn(MprDimBiasApp.DimensionsModifyDilutionUpdater);
         }
 
-        private void ChkOnOffDimModifyBias_Unchecked(object sender, RoutedEventArgs e)
+        private static void ChkOnOffDimModifyBias_Unchecked(object sender, RoutedEventArgs e)
         {
-            UserConfigFile.SetValue("mprDimBias", "ModifiedDimBiasOnOff", false.ToString(), true);
-            var addInId = new AddInId(new ModPlusConnector().AddInId);
-            DimensionsDilution.DimModifiedDilutionOff(addInId, ref MprDimBiasApp.DimensionsModifyDilutionUpdater);
+            UserConfigFile.SetValue(LangItem, "ModifiedDimBiasOnOff", false.ToString(), true);
+            DimensionsDilution.DimModifiedDilutionOff(MprDimBiasApp.DimensionsModifyDilutionUpdater);
         }
 
         private void BtOk_OnClick(object sender, RoutedEventArgs e)
@@ -63,8 +72,8 @@
                     return;
                 }
 
-                MprDimBiasApp.K = TbK.Value.Value;
-                UserConfigFile.SetValue("mprDimBias", "K", TbK.Value.Value.ToString(CultureInfo.InvariantCulture), true);
+                MprDimBiasApp.OffsetFactor = TbK.Value.Value;
+                UserConfigFile.SetValue(LangItem, "K", TbK.Value.Value.ToString(CultureInfo.InvariantCulture), true);
                 Close();
             }
         }
@@ -74,18 +83,32 @@
             try
             {
                 Statistic.SendCommandStarting(new ModPlusConnector());
-                TbK.Value = MprDimBiasApp.K;
-                ChkOnOffDimBias.IsChecked = bool.TryParse(UserConfigFile.GetValue("mprDimBias", "DimBiasOnOff"), out var b) && b; 
-                ChkOnOffDimModifyBias.IsChecked = bool.TryParse(UserConfigFile.GetValue("mprDimBias", "ModifiedDimBiasOnOff"), out b) && b;
+                TbK.Value = MprDimBiasApp.OffsetFactor;
+                ChkOnOffDimBias.IsChecked = bool.TryParse(UserConfigFile.GetValue(LangItem, "DimBiasOnOff"), out var b) && b; 
+                ChkOnOffDimModifyBias.IsChecked = bool.TryParse(UserConfigFile.GetValue(LangItem, "ModifiedDimBiasOnOff"), out b) && b;
+                ChkMoveDownInsteadSide.IsChecked = bool.TryParse(UserConfigFile.GetValue(LangItem, "MoveDownInsteadSide"), out b) && b;
+
                 ChkOnOffDimBias.Checked += ChkOnOffDimBias_OnChecked;
                 ChkOnOffDimBias.Unchecked += ChkOnOffDimBias_OnUnchecked;
                 ChkOnOffDimModifyBias.Checked += ChkOnOffDimModifyBias_Checked;
                 ChkOnOffDimModifyBias.Unchecked += ChkOnOffDimModifyBias_Unchecked;
+                ChkMoveDownInsteadSide.Checked += ChkMoveDownInsteadSideOnChecked;
+                ChkMoveDownInsteadSide.Unchecked += ChkMoveDownInsteadSideOnUnchecked;
             }
             catch (Exception exception)
             {
                 ExceptionBox.Show(exception);
             }
+        }
+
+        private void ChkMoveDownInsteadSideOnChecked(object sender, RoutedEventArgs e)
+        {
+            UserConfigFile.SetValue(LangItem, "MoveDownInsteadSide", true.ToString(), true);
+        }
+
+        private void ChkMoveDownInsteadSideOnUnchecked(object sender, RoutedEventArgs e)
+        {
+            UserConfigFile.SetValue(LangItem, "MoveDownInsteadSide", false.ToString(), true);
         }
 
         private void BtResetTextPositionForSelected_OnClick(object sender, RoutedEventArgs e)
@@ -152,7 +175,7 @@
 
                         foreach (var dimension in dimensions)
                         {
-                            DimensionsDilution.DoDilution(dimension, doc, out _);
+                            new AdvancedDimension(dimension).SetMoveForCorrect();
                         }
 
                         transaction.Commit();
@@ -191,29 +214,6 @@
             }
 
             return dimensions;
-        }
-
-        internal class DimensionsFilter : ISelectionFilter
-        {
-            public bool AllowElement(Element elem)
-            {
-                if (elem is Dimension dimension)
-                {
-                    var equalityParameter = dimension.get_Parameter(BuiltInParameter.DIM_DISPLAY_EQ);
-                    if (dimension is SpotDimension || 
-                        (equalityParameter != null && equalityParameter.AsInteger() == 2))
-                        return false;
-                    
-                    return true;
-                }
-
-                return false;
-            }
-
-            public bool AllowReference(Reference reference, XYZ position)
-            {
-                throw new NotImplementedException();
-            }
         }
     }
 }

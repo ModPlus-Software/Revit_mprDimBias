@@ -80,6 +80,7 @@
     <Compile Include="Body\AdvancedDimensionSegment.cs" />
     <Compile Include="Body\DimDirection.cs" />
     <Compile Include="Body\DimensionsDilutionUpdater.cs" />
+    <Compile Include="Body\DimensionsModifyDilutionUpdater.cs" />
     <Compile Include="Body\DimInfo.cs" />
     <Compile Include="Body\GeometryHelpers.cs" />
     <Compile Include="ModPlusConnector.cs" />
@@ -87,6 +88,7 @@
     <Compile Include="View\DimBiasSettings.xaml.cs">
       <DependentUpon>DimBiasSettings.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Body\DimensionsFilter.cs" />
     <Compile Include="Work\DimensionsDilution.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -194,4 +196,8 @@
     </PackageReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <PostBuildEvent>
+    </PostBuildEvent>
+  </PropertyGroup>
 </Project>

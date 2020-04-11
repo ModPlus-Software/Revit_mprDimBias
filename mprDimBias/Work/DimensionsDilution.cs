@@ -5,23 +5,7 @@
 
     public class DimensionsDilution
     {
-        /// <summary>Выполнить "разнесение" размерных значений для указанного размера</summary>
-        /// <param name="dimension"></param>
-        /// <param name="doc"></param>
-        /// <param name="modified">Размер был изменен</param>
-        public static void DoDilution(Dimension dimension, Document doc, out bool modified)
-        {
-            try
-            {
-                new AdvancedDimension(dimension, doc).SetMoveForCorrect(out modified);
-            }
-            catch
-            {
-                modified = false;
-            }
-        }
-
-        public static void DimDilutionOn(AddInId activeAddInId, ref DimensionsDilutionUpdater updater)
+        public static void DimDilutionOn(DimensionsDilutionUpdater updater)
         {
             if (!UpdaterRegistry.IsUpdaterRegistered(updater.GetUpdaterId()))
             {
@@ -31,7 +15,7 @@
             }
         }
 
-        public static void DimModifiedDilutionOn(AddInId activeAddInId,  ref DimensionsModifyDilutionUpdater modifyUpdater)
+        public static void DimModifiedDilutionOn(DimensionsModifyDilutionUpdater modifyUpdater)
         {
             if (!UpdaterRegistry.IsUpdaterRegistered(modifyUpdater.GetUpdaterId()))
             {
@@ -41,7 +25,7 @@
             }
         }
 
-        public static void DimDilutionOff(AddInId activeAddInId, ref DimensionsDilutionUpdater updater)
+        public static void DimDilutionOff(DimensionsDilutionUpdater updater)
         {
             if (UpdaterRegistry.IsUpdaterRegistered(updater.GetUpdaterId()))
             {
@@ -49,7 +33,7 @@
             }
         }
 
-        public static void DimModifiedDilutionOff(AddInId activeAddInId, ref DimensionsModifyDilutionUpdater modifyUpdater)
+        public static void DimModifiedDilutionOff(DimensionsModifyDilutionUpdater modifyUpdater)
         {
             if (UpdaterRegistry.IsUpdaterRegistered(modifyUpdater.GetUpdaterId()))
             {
@@ -57,7 +41,7 @@
             }
         }
 
-        public static void DimDilutionStatus(AddInId activeAddInId, ref DimensionsDilutionUpdater updater)
+        public static void DimDilutionStatus(DimensionsDilutionUpdater updater)
         {
             if (updater != null)
             {
@@ -72,7 +56,7 @@
             }
         }
 
-        public static void DimModifiedDilutionStatus(AddInId activeAddInId, ref DimensionsModifyDilutionUpdater modifyUpdater)
+        public static void DimModifiedDilutionStatus(DimensionsModifyDilutionUpdater modifyUpdater)
         {
             if (modifyUpdater != null)
             {

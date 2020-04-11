@@ -39,10 +39,10 @@
             ViewRigthDirection = view.RightDirection;
             ViewUpDigit = GeometryHelpers.IsAboveDir(ViewUpDirection) ? -1 : 1;
             ViewRigthDigit = GeometryHelpers.IsAboveDir(ViewRigthDirection) ? -1 : 1;
-            ViewUp = GeometryHelpers.GetDirFromVector(ViewUpDirection);
-            ViewRigth = GeometryHelpers.GetDirFromVector(ViewRigthDirection);
-            DimensDir = GeometryHelpers.GetDirFromVector(dimDir);
-            ViewDirDir = GeometryHelpers.GetDirFromVector(ViewDir);
+            ViewUp = GeometryHelpers.GetDirectionFromVector(ViewUpDirection);
+            ViewRigth = GeometryHelpers.GetDirectionFromVector(ViewRigthDirection);
+            DimensDir = GeometryHelpers.GetDirectionFromVector(dimDir);
+            ViewDirDir = GeometryHelpers.GetDirectionFromVector(ViewDir);
         }
     }
 }

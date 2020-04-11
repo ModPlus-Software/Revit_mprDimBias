@@ -3,65 +3,89 @@
     using Application;
     using Autodesk.Revit.DB;
 
+    /// <summary>
+    /// Сегмент размера
+    /// </summary>
     public class AdvancedDimensionSegment
     {
-        public AdvancedDimensionSegment()
-        {
-            IsFirst = false;
-            IsLast = false;
-        }
+        private readonly string _valueString;
 
-        public AdvancedDimensionSegment(DimensionSegment segment, object beforeSegment, object afterSegment)
+        /// <summary>
+        /// Initializes a new instance of the <see cref="AdvancedDimensionSegment"/> class.
+        /// </summary>
+        /// <param name="segment">Исходный сегмент размера Revit <see cref="DimensionSegment"/></param>
+        /// <param name="beforeSegment">Предшествующий сегмент</param>
+        /// <param name="afterSegment">Последующий сегмент</param>
+        public AdvancedDimensionSegment(DimensionSegment segment, DimensionSegment beforeSegment, DimensionSegment afterSegment)
         {
-            IsFirst = !(beforeSegment is DimensionSegment);
-            IsLast = !(afterSegment is DimensionSegment);
             Segment = segment;
 
-            if (!IsFirst)
-                BeforeSegment = beforeSegment as DimensionSegment;
-            else
-                BeforeSegment = null;
-
-            if (!IsLast)
-                AfterSegment = afterSegment as DimensionSegment;
-            else
-                AfterSegment = null;
+            BeforeSegment = beforeSegment;
+            AfterSegment = afterSegment;
 
             if (Segment.Value.HasValue)
             {
                 Value = Segment.Value.Value;
-                ValueString = Segment.ValueString;
+                _valueString = Segment.ValueString;
             }
-
-            PosXyz = Segment.TextPosition;
         }
 
-        public DimensionSegment AfterSegment { get; set; }
+        /// <summary>
+        /// Исходный сегмент размера Revit <see cref="DimensionSegment"/>
+        /// </summary>
+        public DimensionSegment Segment { get; }
 
-        public DimensionSegment BeforeSegment { get; set; }
+        /// <summary>
+        /// Измеренная длина сегмента
+        /// </summary>
+        public double Value { get; }
 
-        public bool IsFirst { get; set; }
+        /// <summary>
+        /// Последующий сегмент
+        /// </summary>
+        public DimensionSegment AfterSegment { get; }
 
-        public bool IsLast { get; set; }
+        /// <summary>
+        /// Предшествующий сегмент
+        /// </summary>
+        public DimensionSegment BeforeSegment { get; }
 
-        public bool NeedCorrect { get; set; }
+        /// <summary>
+        /// Сегмент является первым в размере
+        /// </summary>
+        public bool IsFirst => BeforeSegment == null;
 
-        public XYZ PosXyz { get; set; }
+        /// <summary>
+        /// Сегмент является последним в размере
+        /// </summary>
+        public bool IsLast => AfterSegment == null;
 
-        public DimensionSegment Segment { get; set; }
+        /// <summary>
+        /// Сегмент является средним
+        /// </summary>
+        public bool IsMiddle => !IsFirst && !IsLast;
 
-        public double StringLenght { get; set; }
+        /// <summary>
+        /// Требуется смещение текста для текущего сегмента
+        /// </summary>
+        public bool NeedCorrect { get; private set; }
 
-        public double Value { get; set; }
+        /// <summary>
+        /// Длина строки с учетом масштаба, размера текста и коэффициента смещения
+        /// </summary>
+        public double StringLength { get; set; }
 
-        public string ValueString { get; set; }
-
-        public void SetCorrectStatus(double scale, double textSize)
+        /// <summary>
+        /// Выполнить проверку возможности и необходимости смещения текста для сегмента
+        /// </summary>
+        /// <param name="scale">Масштаб вида</param>
+        /// <param name="textSize">Размер текста</param>
+        public void CheckNeedCorrection(double scale, double textSize)
         {
             if (Segment.IsTextPositionAdjustable())
             {
-                StringLenght = ValueString.Length * textSize * scale * MprDimBiasApp.K;
-                NeedCorrect = StringLenght >= Value;
+                StringLength = _valueString.Length * textSize * scale * MprDimBiasApp.OffsetFactor;
+                NeedCorrect = StringLength >= Value;
             }
             else
             {
