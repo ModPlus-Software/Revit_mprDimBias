@@ -6,6 +6,9 @@
     {
         public DimDirection DimensDir { get; set; }
 
+        /// <summary>
+        /// Вектор направления размерной линии
+        /// </summary>
         public XYZ Direction { get; set; }
 
         public int DirectionDigit { get; set; }
@@ -16,11 +19,11 @@
 
         public DimDirection ViewDirDir { get; set; }
 
-        public DimDirection ViewRigth { get; set; }
+        public DimDirection ViewRight { get; set; }
 
-        public int ViewRigthDigit { get; set; }
+        public int ViewRightDigit { get; set; }
 
-        public XYZ ViewRigthDirection { get; set; }
+        public XYZ ViewRightDirection { get; set; }
 
         public DimDirection ViewUp { get; set; }
 
@@ -28,7 +31,7 @@
 
         public XYZ ViewUpDirection { get; set; }
 
-        public DimInfo(Autodesk.Revit.DB.View view, XYZ dimDir)
+        public DimInfo(View view, XYZ dimDir)
         {
             this = new DimInfo();
             Direction = dimDir;
@@ -36,11 +39,11 @@
             ViewDir = view.ViewDirection;
             ViewDirDigit = GeometryHelpers.IsAboveDir(ViewDir) ? -1 : 1;
             ViewUpDirection = view.UpDirection;
-            ViewRigthDirection = view.RightDirection;
+            ViewRightDirection = view.RightDirection;
             ViewUpDigit = GeometryHelpers.IsAboveDir(ViewUpDirection) ? -1 : 1;
-            ViewRigthDigit = GeometryHelpers.IsAboveDir(ViewRigthDirection) ? -1 : 1;
+            ViewRightDigit = GeometryHelpers.IsAboveDir(ViewRightDirection) ? -1 : 1;
             ViewUp = GeometryHelpers.GetDirectionFromVector(ViewUpDirection);
-            ViewRigth = GeometryHelpers.GetDirectionFromVector(ViewRigthDirection);
+            ViewRight = GeometryHelpers.GetDirectionFromVector(ViewRightDirection);
             DimensDir = GeometryHelpers.GetDirectionFromVector(dimDir);
             ViewDirDir = GeometryHelpers.GetDirectionFromVector(ViewDir);
         }

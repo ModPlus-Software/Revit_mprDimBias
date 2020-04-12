@@ -229,6 +229,11 @@
                 if (upDown == 1)
                     leftSideProcessedCount++;
 
+                // Особый случай - если сегментов всего два и они не попадут под условие сдвига в сторону при свободном 
+                // месте, то их нужно будет сдвигать в разные стороны, так как по вертикале они будут смещены на одинаковое расстояние
+                if (middleSegments.Count == 2 && i == 1)
+                    horVector *= -1;
+
                 var currentSegment = middleSegments[i];
                 var leftSegment = currentSegment.BeforeSegment;
                 var rightSegment = currentSegment.AfterSegment;
@@ -283,7 +288,7 @@
                         else
                             verticalVector--;
                     }
-                    
+
                     ComplexMoveSegment(currentSegment, horVector, verticalVector * upDown);
                 }
             }

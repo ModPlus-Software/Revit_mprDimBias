@@ -20,7 +20,9 @@
 
         public static bool IsAboveDir(XYZ direction)
         {
-            return Math.Round(direction.X, 1) < 0 || Math.Round(direction.Y, 1) < 0 || !(Math.Round(direction.Z, 1) >= 0);
+            return Math.Round(direction.X, 1) < 0 ||
+                   Math.Round(direction.Y, 1) < 0 || 
+                   !(Math.Round(direction.Z, 1) >= 0);
         }
 
         public static XYZ MoveByViewCorrectDir(XYZ p1, DimInfo info, double stringLen, int vector)
@@ -34,17 +36,17 @@
                 stringLen *= vector;
                 if (info.ViewDirDir != DimDirection.Z)
                 {
-                    if (info.ViewRigthDigit < 0 || info.ViewUpDigit < 0)
+                    if (info.ViewRightDigit < 0 || info.ViewUpDigit < 0)
                     {
-                        stringLen *= info.ViewRigthDigit == info.ViewUpDigit ? 1 : -1;
+                        stringLen *= info.ViewRightDigit == info.ViewUpDigit ? 1 : -1;
                     }
                 }
             }
 
-            if (info.Direction.Z < 0)
-            {
-                stringLen *= -1;
-            }
+            ////if (info.Direction.Z < 0)
+            ////{
+            ////    stringLen *= -1;
+            ////}
 
             return MoveXyzByVector(p1, stringLen, info.Direction);
         }
@@ -61,9 +63,9 @@
                 stringLen *= vector;
                 if (info.ViewDirDir != DimDirection.Z)
                 {
-                    if (info.ViewRigthDigit < 0 || info.ViewUpDigit < 0)
+                    if (info.ViewRightDigit < 0 || info.ViewUpDigit < 0)
                     {
-                        stringLen *= info.ViewRigthDigit == info.ViewUpDigit ? 1 : -1;
+                        stringLen *= info.ViewRightDigit == info.ViewUpDigit ? 1 : -1;
                     }
                 }
             }
@@ -73,8 +75,8 @@
                 stringLen *= -1;
             }
 
-            var perpendicular = info.Direction.CrossProduct(info.ViewDir);
-            
+            var perpendicular = VectorVectorMultiply(info.Direction, info.ViewDir);
+
             return MoveXyzByVector(p1, stringLen, textHeight, info.Direction, perpendicular);
         }
 
@@ -88,6 +90,14 @@
             p1 = MoveXyzByVector(p1, lenX, horiz);
             p1 = MoveXyzByVector(p1, lenY, vert);
             return p1;
+        }
+
+        private static XYZ VectorVectorMultiply(XYZ v1, XYZ v2)
+        {
+            var x = (v1.Y * v2.Z) + (v2.Y * v1.Z);
+            var y = -((v1.X * v2.Z) + (v1.Z * v2.X));
+            var z = Math.Abs(v1.X * v2.Y) + Math.Abs(v1.Y * v2.X);
+            return new XYZ(x, y, z);
         }
     }
 }
