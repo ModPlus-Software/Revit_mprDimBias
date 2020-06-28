@@ -12,9 +12,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyVersion("3.0.2.0")]
 [assembly: AssemblyFileVersion("3.0.2.0")]
 
-#if R2016
-[assembly: AssemblyDescription("2016")]
-#elif R2017
+#if R2017
 [assembly: AssemblyDescription("2017")]
 #elif R2018
 [assembly: AssemblyDescription("2018")]
