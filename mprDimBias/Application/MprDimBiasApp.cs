@@ -118,8 +118,9 @@
                 application,
                 "ModPlus",
                 Language.TryGetCuiLocalGroupName("Аннотации"));
-            
+
             var intF = new ModPlusConnector();
+            
             var rid = new PushButtonData(
                 intF.Name,
                 ConvertLName(Language.GetFunctionLocalName(intF)),
@@ -127,7 +128,8 @@
                 intF.FullClassName)
             {
                 LargeImage = new System.Windows.Media.Imaging.BitmapImage(
-                    new Uri("pack://application:,,,/mprDimBias_" + intF.AvailProductExternalVersion + ";component/Resources/mprDimBias_32x32.png"))
+                    new Uri(
+                        $"pack://application:,,,/mprDimBias_{intF.AvailProductExternalVersion};component/Resources/mprDimBias_32x32.png"))
             };
             rid.ToolTip = Language.GetFunctionShortDescription(intF);
             rid.LongDescription = Language.GetFunctionFullDescription(intF);

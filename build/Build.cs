@@ -30,7 +30,7 @@ class Build : NukeBuild
             
             var postBuild = Environment.GetEnvironmentVariable("ModPlusPostBuild");
             var build = new List<string>();
-            foreach (var (_, c) in project.Configurations)
+            foreach (var (_, c) in Solution.Configurations)
             {
                 var configuration = c.Split("|")[0];
                 var platform = c.Split("|")[1];
