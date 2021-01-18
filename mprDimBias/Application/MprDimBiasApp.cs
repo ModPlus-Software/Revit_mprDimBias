@@ -17,7 +17,7 @@
     public class MprDimBiasApp : IExternalApplication
     {
         private static UIControlledApplication _application;
-        
+
         /// <summary>
         /// Идентификаторы размеров, смещенных при работе текущего плагина
         /// </summary>
@@ -53,10 +53,10 @@
 
                 DimsModifiedByUpdater = new Dictionary<ElementId, bool>();
 
-                var dimDilWorkVar = 
+                var dimDilWorkVar =
                     bool.TryParse(UserConfigFile.GetValue("mprDimBias", "DimBiasOnOff"), out var b) && b;
 
-                var dimModifiedDilWorkVar = 
+                var dimModifiedDilWorkVar =
                     bool.TryParse(UserConfigFile.GetValue("mprDimBias", "ModifiedDimBiasOnOff"), out b) && b;
 
                 OffsetFactor = double.TryParse(UserConfigFile.GetValue("mprDimBias", "K"), NumberStyles.Number, CultureInfo.InvariantCulture, out var d)
@@ -97,10 +97,26 @@
             if (sender is UIApplication uiApplication)
             {
                 _application.Idling -= ApplicationOnIdling;
+#if !R2017 && !R2018 && !R2019 && !R2020
+                uiApplication.Application.DocumentReloadingLatest += ApplicationOnDocumentReloadingLatest;
+                uiApplication.Application.DocumentReloadedLatest += ApplicationOnDocumentReloadedLatest;
+#endif
                 uiApplication.Application.DocumentSynchronizingWithCentral += ApplicationOnDocumentSynchronizingWithCentral;
                 uiApplication.Application.DocumentSynchronizedWithCentral += ApplicationOnDocumentSynchronizedWithCentral;
             }
         }
+
+#if !R2017 && !R2018 && !R2019 && !R2020
+        private static void ApplicationOnDocumentReloadedLatest(object sender, DocumentReloadedLatestEventArgs e)
+        {
+            IsSyncInWork = false;
+        }
+
+        private static void ApplicationOnDocumentReloadingLatest(object sender, DocumentReloadingLatestEventArgs e)
+        {
+            IsSyncInWork = true;
+        }
+#endif
 
         private static void ApplicationOnDocumentSynchronizedWithCentral(object sender, DocumentSynchronizedWithCentralEventArgs e)
         {
@@ -120,7 +136,7 @@
                 Language.TryGetCuiLocalGroupName("Аннотации"));
 
             var intF = new ModPlusConnector();
-            
+
             var rid = new PushButtonData(
                 intF.Name,
                 ConvertLName(Language.GetFunctionLocalName(intF)),

@@ -24,6 +24,9 @@
             _uiApplication = uiApplication;
             InitializeComponent();
             Title = ModPlusAPI.Language.GetItem(LangItem, "h1");
+#if R2017 || R2018 || R2019 || R2020
+            AttentionMessageForStandardMode.Visibility = System.Windows.Visibility.Visible;
+#endif
         }
 
         private static void ChkOnOffDimBias_OnChecked(object sender, RoutedEventArgs e)
@@ -84,7 +87,7 @@
             {
                 Statistic.SendCommandStarting(new ModPlusConnector());
                 TbK.Value = MprDimBiasApp.OffsetFactor;
-                ChkOnOffDimBias.IsChecked = bool.TryParse(UserConfigFile.GetValue(LangItem, "DimBiasOnOff"), out var b) && b; 
+                ChkOnOffDimBias.IsChecked = bool.TryParse(UserConfigFile.GetValue(LangItem, "DimBiasOnOff"), out var b) && b;
                 ChkOnOffDimModifyBias.IsChecked = bool.TryParse(UserConfigFile.GetValue(LangItem, "ModifiedDimBiasOnOff"), out b) && b;
                 ChkMoveDownInsteadSide.IsChecked = bool.TryParse(UserConfigFile.GetValue(LangItem, "MoveDownInsteadSide"), out b) && b;
 

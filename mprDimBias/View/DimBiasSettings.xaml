@@ -27,14 +27,46 @@
             <ColumnDefinition Width="*"></ColumnDefinition>
             <ColumnDefinition Width="Auto"></ColumnDefinition>
         </Grid.ColumnDefinitions>
-        <CheckBox Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2"
+        
+        <CheckBox Grid.Row="0"
+                  Grid.Column="0"
+                  Grid.ColumnSpan="2"
                   Content="{Binding Source={StaticResource Lang}, XPath=h2}"
-                  Name="ChkOnOffDimBias"></CheckBox>
-        <CheckBox Grid.Row="1" Grid.Column="0" VerticalAlignment="Center"
+                  Name="ChkOnOffDimBias"/>
+
+        <Viewbox Grid.Row="0"
+                 Grid.Column="1"
+                 Width="24"
+                 Height="24"
+                 HorizontalAlignment="Left"
+                 Margin="4 0 0 0"
+                 ToolTipService.InitialShowDelay="0"
+                 ToolTipService.ShowDuration="15000"
+                 Name="AttentionMessageForStandardMode"
+                 Visibility="Collapsed">
+            <Canvas Width="24" Height="24">
+                <Path Data="M13,14H11V10H13M13,18H11V16H13M1,21H23L12,2L1,21Z" Fill="DarkOrange" />
+            </Canvas>
+            <Viewbox.ToolTip>
+                <ToolTip>
+                    <TextBlock Width="400" FontSize="14" TextWrapping="Wrap"
+                               Text="{Binding Source={StaticResource Lang}, XPath=h13}"/>
+                </ToolTip>
+            </Viewbox.ToolTip>
+        </Viewbox>
+        
+        <CheckBox Grid.Row="1"
+                  Grid.Column="0"
+                  VerticalAlignment="Center"
                   Content="{Binding Source={StaticResource Lang}, XPath=h3}"
                   Name="ChkOnOffDimModifyBias"></CheckBox>
-        <Viewbox Grid.Row="1" Grid.Column="1" Width="24" Height="24"
-                 HorizontalAlignment="Left" Margin="4 0 0 0"
+        
+        <Viewbox Grid.Row="1"
+                 Grid.Column="1"
+                 Width="24"
+                 Height="24"
+                 HorizontalAlignment="Left"
+                 Margin="4 0 0 0"
                  ToolTipService.InitialShowDelay="0"
                  ToolTipService.ShowDuration="15000">
             <Canvas Width="24" Height="24">
@@ -47,6 +79,7 @@
                 </ToolTip>
             </Viewbox.ToolTip>
         </Viewbox>
+
         <TextBlock Grid.Row="2" Grid.Column="0" Text="{Binding Source={StaticResource Lang}, XPath=h4}"
                    VerticalAlignment="Center" Margin="{DynamicResource ModPlusDefaultMargin}"></TextBlock>
         <mps:NumericBox Grid.Row="2" Grid.Column="1" Maximum="2.0" Minimum="0.1"
