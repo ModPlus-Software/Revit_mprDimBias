@@ -143,6 +143,9 @@
                 Assembly.GetExecutingAssembly().Location,
                 intF.FullClassName)
             {
+                Image = new System.Windows.Media.Imaging.BitmapImage(
+                    new Uri(
+                        $"pack://application:,,,/mprDimBias_{intF.AvailProductExternalVersion};component/Resources/mprDimBias_16x16.png")),
                 LargeImage = new System.Windows.Media.Imaging.BitmapImage(
                     new Uri(
                         $"pack://application:,,,/mprDimBias_{intF.AvailProductExternalVersion};component/Resources/mprDimBias_32x32.png"))
